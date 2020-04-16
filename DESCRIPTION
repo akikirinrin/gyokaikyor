@@ -14,5 +14,17 @@ Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.0
+Imports: 
+    devtools,
+    dplyr,
+    tidyr,
+    tibble,
+    stringr,
+    purrr,
+    readxl,
+    magrittr,
+    testthat,
+    knitr,
+    rmarkdown
 Suggests: 
-    testthat
+    usethis
