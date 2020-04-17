@@ -1,7 +1,7 @@
 context("Load_catch_dummy_kagoshima")
 
 test_that("load_catch_dummy_kagoshima exits", {
-  expect_silent(load_catch_dummy_kagoshima())
+  expect_silent(load_catch_dummy_kagoshima)
 })
 
 test_that("load_catch_dummy_kagoshima is a data frame", {
