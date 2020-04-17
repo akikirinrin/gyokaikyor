@@ -12,7 +12,7 @@ test_that("load_catch_dummy_kagoshima is a data frame", {
 
 context("- Numerical test")
 
-test_that("catch is created with one-by-one ascending number",{
+test_that("catch is created with one-by-one ascending number", {
 
   prefec_catch_sum_test(
     load_catch_dummy_kagoshima(),

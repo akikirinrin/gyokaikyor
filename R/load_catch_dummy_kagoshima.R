@@ -1,7 +1,7 @@
 load_catch_dummy_kagoshima <- function() {
 
   year <- rep(1950:2020, each = 12)
-  month <- rep(1:12, 2021-1950)
+  month <- rep(1:12, 2021 - 1950)
 
   akune <-
     tibble::tibble("Catch_ton" = seq(from = 1, to = 852),
