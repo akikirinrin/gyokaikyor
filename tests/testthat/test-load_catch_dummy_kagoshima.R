@@ -17,7 +17,8 @@ test_that("catch is created with one-by-one ascending number", {
   prefec_catch_sum_test(
     load_catch_dummy_kagoshima(),
     prefec = "鹿児島", location = "阿久根", fishery = "まき網",
-    expected_data = 363378)
+    expected_data = 363378
+  )
 
   prefec_catch_sum_test(
     load_catch_dummy_kagoshima(),
