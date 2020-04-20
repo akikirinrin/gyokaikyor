@@ -18,31 +18,36 @@ test_that("catch is created with one-by-one ascending number", {
     load_catch_dummy_kagoshima(),
     prefec = "鹿児島", location = "阿久根", fishery = "まき網",
     expected_data = 363378
-  )
+    )
 
   prefec_catch_sum_test(
     load_catch_dummy_kagoshima(),
     prefec = "鹿児島", location = "枕崎", fishery = "まき網",
-    expected_data = 1089282)
+    expected_data = 1089282
+    )
 
   prefec_catch_sum_test(
     load_catch_dummy_kagoshima(),
     prefec = "鹿児島", location = "山川", fishery = "まき網",
-    expected_data = 1815186)
+    expected_data = 1815186
+    )
 
   prefec_catch_sum_test(
     load_catch_dummy_kagoshima(),
     prefec = "鹿児島", location = "内之浦", fishery = "まき網",
-    expected_data = 2541090)
+    expected_data = 2541090
+    )
 
   prefec_catch_sum_test(
     load_catch_dummy_kagoshima(),
     prefec = "鹿児島", location = "阿久根", fishery = "その他",
-    expected_data = 3266994)
+    expected_data = 3266994
+    )
 
   prefec_catch_sum_test(
     load_catch_dummy_kagoshima(),
     prefec = "鹿児島", location = "内之浦", fishery = "その他",
-    expected_data = 3992898)
+    expected_data = 3992898
+    )
 
 })
