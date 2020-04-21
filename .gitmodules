@@ -1,0 +1,3 @@
+[submodule "stockdbr"]
+	path = stockdbr
+	url = git@github.com:JK-junkin/stockdbr.git
