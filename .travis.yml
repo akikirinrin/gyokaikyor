@@ -3,3 +3,10 @@
 language: R
 warnings_are_errors: false
 cache: packages
+
+install:
+- R -e 'devtools::install("stockdbr")'
+- R -e 'devtools::install_deps(dep = T)'
+
+script:
+- R CMD check .
