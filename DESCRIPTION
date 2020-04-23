@@ -27,4 +27,5 @@ Imports:
     knitr,
     rmarkdown
 Suggests: 
-    usethis
+    usethis,
+    covr
