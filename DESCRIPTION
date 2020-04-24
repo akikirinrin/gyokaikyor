@@ -28,4 +28,5 @@ Imports:
     rmarkdown
 Suggests: 
     usethis,
-    covr
+    covr,
+    lintr

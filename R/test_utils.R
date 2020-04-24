@@ -9,5 +9,5 @@ prefec_catch_sum_test <-
       dplyr::pull(Catch_ton) %>%
       sum()
 
-    expect_equal(our_data, expected_data)
+    testthat::expect_equal(our_data, expected_data)
   }
