@@ -30,3 +30,4 @@ Suggests:
     usethis,
     covr,
     lintr
+VignetteBuilder: knitr
