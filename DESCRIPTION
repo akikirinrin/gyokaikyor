@@ -25,9 +25,12 @@ Imports:
     magrittr,
     testthat,
     knitr,
-    rmarkdown
+    rmarkdown,
+    lucifer (>= 0.2.0.9000)
 Suggests: 
     usethis,
     covr,
     lintr
 VignetteBuilder: knitr
+Remotes:  
+    akikirinrin/lucifer
