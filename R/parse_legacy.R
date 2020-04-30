@@ -14,7 +14,7 @@ parse_legacy.maiwashi_maaji <- function(fname, year, species) {
   lucifer::rebel(fname, sheet_regex = generate_prefec(),
                  cluster = list(dir = "v",
                                 pos = 2,
-                                regex = "月＼年",
+                                regex = "\\u6708\\uff3c\\u5e74", #月＼年
                                 offset = c(0, 0),
                                 ends = list(row = "12",
                                             col = as.character(year)),
@@ -24,8 +24,10 @@ parse_legacy.maiwashi_maaji <- function(fname, year, species) {
                              pos = 1,
                              regex = "以下入力データシート",
                              use_after = FALSE)) %>%
-    dplyr::rename(month = `月\\年`,
-                  fishery = key1) %>%
+    dplyr::rename(
+      month = stringi::stri_unescape_unicode("\\u6708\\\\\\u5e74"), #月\年
+      fishery = key1
+    ) %>%
     dplyr::select(month, fishery, 漁法, fname, sheet,
                   dplyr::matches("\\d{4}")) %>%
     tidyr::gather(-month, -fishery, -fname, -sheet,
