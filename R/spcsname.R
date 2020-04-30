@@ -28,7 +28,7 @@ standardize_spcsname <- function(dat) {
     recode_spcsname("宮崎", "その他", "その他シラス") %>% # 確認の後修正
     recode_spcsname("鹿児島", "その他", "その他魚種") %>% # 確認の後修正
     recode_spcsname("鹿児島", "メナガ", "マルアジ") %>%
-    recode_spcsname(all_prefec, "maiwashi", "マイワシ") %>% # レガシー使用県(HK, TK, EH, KG)
+    recode_spcsname(all_prefec, "maiwashi", "マイワシ") %>% # レガシー使用県(HK, TK, EH, KG) # nolint
     recode_spcsname(all_prefec, "サバ類", "さば類") %>%
     recode_spcsname(all_prefec, "カタクチ", "カタクチイワシ") %>%
     recode_spcsname(all_prefec, "ウルメ", "ウルメイワシ") %>%
