@@ -28,3 +28,7 @@ set_region_by_two <- function(prefec, boundary_prefec) {
                  paste0(j_prefecs[boundary_number - 1], "以東"))
 
 }
+#' Denial of `%in%`
+`%not_in%` <- function(x, y) {
+  all(!(x %in% y))
+}
