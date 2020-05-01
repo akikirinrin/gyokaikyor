@@ -3,3 +3,6 @@
 ^data-raw$
 ^\.travis\.yml$
 ^\.covrignore$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$
