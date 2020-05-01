@@ -1,0 +1,21 @@
+---
+title: "test_vignette"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{test_vignette}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+devtools::load_all()
+```
+
+This is a sample vignette.
