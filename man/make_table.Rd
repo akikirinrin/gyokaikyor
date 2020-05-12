@@ -4,7 +4,7 @@
 \alias{make_table}
 \title{Generate catch table for report}
 \usage{
-make_table(df, spcs, year)
+make_table(df, spcs, year, format = "html")
 }
 \arguments{
 \item{df}{Data frame with
