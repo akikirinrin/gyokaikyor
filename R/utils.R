@@ -28,7 +28,11 @@ set_region_by_two <- function(prefec, boundary_prefec) {
                  paste0(j_prefecs[boundary_number - 1], "以東"))
 
 }
+
+
 #' Denial of `%in%`
+#' @inheritParams base::match
+#' @param y vector or NULL: the values to be matched against
 `%not_in%` <- function(x, y) {
   all(!(x %in% y))
 }
