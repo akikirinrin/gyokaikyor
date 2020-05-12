@@ -26,11 +26,12 @@ Imports:
     testthat,
     knitr,
     rmarkdown,
-    lucifer (>= 0.2.0.9000)
+    lucifer (>= 0.2.0.9000),
+    assertthat
 Suggests: 
     usethis,
     covr,
     lintr
 VignetteBuilder: knitr
-Remotes:  
+Remotes: 
     akikirinrin/lucifer
