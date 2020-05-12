@@ -28,7 +28,8 @@ Imports:
     rmarkdown,
     lucifer (>= 0.2.0.9000),
     assertthat,
-    kableExtra
+    kableExtra,
+    forcats
 Suggests: 
     usethis,
     covr,
