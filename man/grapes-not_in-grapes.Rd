@@ -8,7 +8,7 @@ x \%not_in\% y
 }
 \arguments{
 \item{x}{vector or \code{NULL}: the values to be matched.
-    \link[base]{Long vectors} are supported.}
+    \link{Long vectors} are supported.}
 
 \item{y}{vector or NULL: the values to be matched against}
 }

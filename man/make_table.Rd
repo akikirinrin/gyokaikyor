@@ -19,7 +19,8 @@ Generate catch table for report
 }
 \examples{
 \dontrun{
-make_table(load_catch_dummy_kagoshima(), spcs = "\u30de\u30a2\u30b8", year = 2019)
-make_table(stockdbr::load_catch(), spcs = "\u30de\u30a2\u30b8", year = 2019)
+make_table(load_catch_dummy_kagoshima(),
+           spcs = "\\u30de\\u30a2\\u30b8", year = 2019)
+make_table(stockdbr::load_catch(), spcs = "\\u30de\\u30a2\\u30b8", year = 2019)
 }
 }
