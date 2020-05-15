@@ -19,3 +19,11 @@ devtools::load_all()
 ```
 
 This is a sample vignette.
+
+## マアジ
+
+```{r}
+spcs <- "\u30de\u30a2\u30b8" # 'maaji' in Japanese
+year <- 2019
+make_table(load_catch_dummy_kagoshima(), spcs = spcs, year = year)
+```
