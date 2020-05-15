@@ -2,7 +2,6 @@
 
 export("%>%")
 export(make_table)
-export(parse_legacy.maiwashi_maaji)
 export(regional_graph)
 export(set_region_by_two)
 importFrom(assertthat,assert_that)
