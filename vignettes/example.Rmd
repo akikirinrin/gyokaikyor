@@ -25,8 +25,15 @@ This is a sample vignette.
 ```{r}
 year <- 2019
 spcs <- "maaji"
-data <- getdata(fname = "../tests/testthat/excel/gyokaikyo_dummy_maaji.xlsx",
-                year = year,
-                spcs = spcs)
-make_table(data, spcs = spcs, year = year)
+maaji <- xl2df(fname = "../tests/testthat/excel/gyokaikyo_dummy_maaji.xlsx",
+               year = year,
+               spcs = spcs)
+```
+
+### 表
+```{r}
+df2table(maaji, year = 2016)
+df2table(maaji, year = 2017)
+df2table(maaji, year = 2018)
+df2table(maaji, year = 2019)
 ```

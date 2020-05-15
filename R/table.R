@@ -13,42 +13,59 @@
 #' }
 #' @importFrom assertthat assert_that has_name
 #' @export
-make_table <- function(df, spcs, year, format = "html") {
+df2table <- function(df, spcs = NULL, year, format = "html") {
   assert_that(
     has_name(df, c("Year", "Species", "Prefec", "Month", "Catch_ton"))
   )
 
-  filter_mutate_ <- function(dat) {
-    dat %>%
+  if (is.null(spcs)) spcs <- unique(df$Species)
+
+  factorize_monthcol <- function(month_or_sum) {
+    factor(month_or_sum, levels = c(1:12, "Sum"))
+  }
+
+  filtrate <- function() {
+    df %>%
       dplyr::filter(Species %in% spcs, Year == year) %>%
       dplyr::mutate(pref_reversed = forcats::fct_relevel(Prefec,
                                                          rev(levels(Prefec))),
-                    Month = as.character(Month)) # To create sumrow later
+                    Month = factorize_monthcol(Month))
   }
 
-  body <- df %>%
-    filter_mutate_() %>%
-    dplyr::group_by(Year, Month, pref_reversed) %>%
-    dplyr::summarize(CatchSum = sum(Catch_ton, na.rm = TRUE) %>%
+  make_tbl_body <- function() {
+    filtrate() %>%
+      dplyr::group_by(Year, Month, pref_reversed) %>%
+      dplyr::summarize(CatchSum = sum(Catch_ton, na.rm = TRUE) %>%
+                         round(1)) %>%
+      tidyr::pivot_wider(names_from = pref_reversed, values_from = CatchSum) %>%
+      dplyr::ungroup()
+  }
+
+  make_sumrow <- function() {
+    make_tbl_body() %>%
+      dplyr::select(-Year, -Month) %>%
+      dplyr::summarize_all(sum, na.rm = TRUE) %>%
+      dplyr::mutate(Year = year,
+                    Month = factorize_monthcol("Sum"))
+  }
+
+  make_sumcol <- function() {
+    filtrate() %>%
+      dplyr::group_by(Year, Month) %>%
+      dplyr::summarize(Sum = sum(Catch_ton, na.rm = TRUE) %>%
                        round(1)) %>%
-    tidyr::pivot_wider(names_from = pref_reversed, values_from = CatchSum) %>%
-    dplyr::ungroup()
+      dplyr::ungroup() %>%
+      dplyr::select(Sum)
+  }
 
-  sumrow <- body %>%
-    dplyr::select(-Year, -Month) %>%
-    dplyr::summarize_all(sum, na.rm = TRUE) %>%
-    dplyr::mutate(Year = year, Month = "Sum")
+  make_alltotal <- function() {
+    data.frame(Sum = sum(make_sumcol()))
+  }
 
-  sumcol <- df %>%
-    filter_mutate_() %>%
-    dplyr::group_by(Year, Month) %>%
-    dplyr::summarize(Sum = sum(Catch_ton, na.rm = TRUE) %>%
-                     round(1)) %>%
-    dplyr::ungroup() %>%
-    dplyr::select(Sum)
+  top <- dplyr::bind_cols(make_tbl_body(), make_sumcol())
+  btm <- dplyr::bind_cols(make_sumrow(), make_alltotal())
 
-  dplyr::bind_cols(body, sumcol) %>%
-    dplyr::bind_rows(c(sumrow, data.frame(Sum = sum(sumcol)))) %>%
+  dplyr::bind_rows(top, btm) %>%
     knitr::kable(booktabs = TRUE, format = format) %>%
     kableExtra::kable_styling(font_size = 5)
 }
