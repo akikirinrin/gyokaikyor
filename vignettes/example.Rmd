@@ -23,10 +23,10 @@ This is a sample vignette.
 ## マアジ
 
 ```{r}
-maaji_jp <- "\u30de\u30a2\u30b8" # 'maaji' in Japanese
-year     <- 2019
+year <- 2019
+spcs <- "maaji"
 data <- getdata(fname = "../tests/testthat/excel/gyokaikyo_dummy_maaji.xlsx",
                 year = year,
-                spcs = "maaji")
-make_table(data, spcs = maaji_jp, year = year)
+                spcs = spcs)
+make_table(data, spcs = spcs, year = year)
 ```

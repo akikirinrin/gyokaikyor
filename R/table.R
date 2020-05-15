@@ -14,7 +14,6 @@
 #' @importFrom assertthat assert_that has_name
 #' @export
 make_table <- function(df, spcs, year, format = "html") {
-
   assert_that(
     has_name(df, c("Year", "Species", "Prefec", "Month", "Catch_ton"))
   )

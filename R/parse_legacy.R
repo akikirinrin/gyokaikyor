@@ -9,7 +9,7 @@ legacy <- function(fname, year, spcs) {
 #' @inheritParams parse_legacy.sabarui
 #' @param fname Name of legacy catch database file of maiwashi and maaji
 parse_legacy <- function(x) {
-    lucifer::rebel(x$fname, sheet_regex = generate_prefec(),
+    lucifer::rebel(x$fname, sheet_regex = generate_prefec(sep = "|"),
                    cluster = list(dir = "v",
                                   pos = 2,
                                   regex = "\\u6708\\uff3c\\u5e74", #月＼年
