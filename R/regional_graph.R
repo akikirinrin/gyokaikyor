@@ -29,8 +29,8 @@ regional_graph <- function(data, species_regex, boundary_prefec, unit = "ton") {
     data %>%
     dplyr::filter(Species %in% target_species) %>%
     dplyr::mutate(
-      Region = stockdbr::set_region_by_two(Prefec,
-                                           boundary_prefec = boundary_prefec),
+      Region = set_region_by_two(Prefec,
+                                 boundary_prefec = boundary_prefec),
       Date = as.Date(paste(Year, Month, "01", sep = "-"))) %>%
     dplyr::group_by(Prefec, Region, Species, Year, Month, Date) %>%
     dplyr::summarise(
