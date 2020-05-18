@@ -23,9 +23,27 @@ This is a sample vignette.
 ## マアジ
 
 ```{r}
-spcs <- "\u30de\u30a2\u30b8" # 'maaji' in Japanese
 year <- 2019
-make_table(load_catch_dummy_kagoshima(), spcs = spcs, year = year)
+spcs <- "maaji"
+maaji <- xl2df(fname = "../tests/testthat/excel/gyokaikyo_dummy_maaji.xlsx",
+               year = year,
+               spcs = spcs)
+```
+
+### 表
+```{r}
+df2table(maaji, year = 2016)
+df2table(maaji, year = 2017)
+df2table(maaji, year = 2018)
+df2table(maaji, year = 2019)
+```
+
+```{r}
+regional_graph(maaji,
+               species_regex = "maaji",
+               boundary_prefec = "\u548c\u6b4c\u5c71", # wakayama
+               unit = "ton")
+
 ```
 
 ```{r}
