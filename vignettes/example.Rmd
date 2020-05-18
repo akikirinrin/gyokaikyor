@@ -27,3 +27,22 @@ spcs <- "\u30de\u30a2\u30b8" # 'maaji' in Japanese
 year <- 2019
 make_table(load_catch_dummy_kagoshima(), spcs = spcs, year = year)
 ```
+
+```{r}
+# Dummy_prefec data is created becasue regional_graph requires
+# at least one data in each region
+
+dummy_chiba <- load_catch_dummy_kagoshima() %>% 
+  dplyr::mutate(Prefec = "千葉")
+
+data <- 
+  dplyr::bind_rows(load_catch_dummy_kagoshima(),
+                  dummy_chiba) %>% 
+  dplyr::mutate(Catch_ton = as.numeric(Catch_ton))
+
+regional_graph(data,
+               species_regex = "マアジ",
+               boundary_prefec = "鹿児島",
+               unit = "ton")
+
+```
