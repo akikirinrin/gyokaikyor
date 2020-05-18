@@ -15,3 +15,9 @@ prefec_catch_sum_test <-
 expect_na_coercion <- function(test) {
   testthat::expect_warning(test, "NAs introduced by coercion")
 }
+
+expect_df_with_na_coercion <- function(test) {
+  expect_na_coercion(
+    testthat::expect_is(test, "data.frame")
+  )
+}
