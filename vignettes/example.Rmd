@@ -39,12 +39,9 @@ df2table(maaji, year = 2019)
 ```
 
 ```{r}
-# Dummy_prefec data is created becasue regional_graph requires
-# at least one data in each region
-
 regional_graph(maaji,
                species_regex = "maaji",
-               boundary_prefec = "\\u548c\\u6b4c\\u5c71", # wakayama
+               boundary_prefec = "\u548c\u6b4c\u5c71", # wakayama
                unit = "ton")
 
 ```
