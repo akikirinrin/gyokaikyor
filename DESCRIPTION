@@ -29,7 +29,8 @@ Imports:
     lucifer (>= 0.2.0.9000),
     assertthat,
     kableExtra,
-    forcats
+    forcats,
+    ggplot2
 Suggests: 
     usethis,
     covr,

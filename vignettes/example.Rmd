@@ -37,3 +37,22 @@ df2table(maaji, year = 2017)
 df2table(maaji, year = 2018)
 df2table(maaji, year = 2019)
 ```
+
+```{r}
+# Dummy_prefec data is created becasue regional_graph requires
+# at least one data in each region
+
+dummy_chiba <- load_catch_dummy_kagoshima() %>% 
+  dplyr::mutate(Prefec = "千葉")
+
+data <- 
+  dplyr::bind_rows(load_catch_dummy_kagoshima(),
+                  dummy_chiba) %>% 
+  dplyr::mutate(Catch_ton = as.numeric(Catch_ton))
+
+regional_graph(data,
+               species_regex = "マアジ",
+               boundary_prefec = "鹿児島",
+               unit = "ton")
+
+```
