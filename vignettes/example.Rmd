@@ -43,8 +43,8 @@ df2table(maaji, year = 2019)
 # at least one data in each region
 
 regional_graph(maaji,
-               species_regex = "マアジ",
-               boundary_prefec = "鹿児島",
+               species_regex = "maaji",
+               boundary_prefec = "\\u548c\\u6b4c\\u5c71", # wakayama
                unit = "ton")
 
 ```
