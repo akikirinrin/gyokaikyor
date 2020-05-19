@@ -25,6 +25,7 @@ parse_legacy_maaji_length_dist <- function(fname) {
                   Frequency = as.numeric(Frequency),
                   Region = as.factor(海域),
                   Fname = fname,
-                  Sheet = sheet) %>%
-    dplyr::select(Year, Month, Region, Length, Frequency, Fname, Sheet)
+                  Sheet = sheet,
+                  Species = "maaji") %>%
+    dplyr::select(Year, Month, Region, Species, Length, Frequency, Fname, Sheet)
 }
