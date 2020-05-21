@@ -30,7 +30,8 @@ Imports:
     assertthat,
     kableExtra,
     forcats,
-    ggplot2
+    ggplot2,
+    gridExtra
 Suggests: 
     usethis,
     covr,

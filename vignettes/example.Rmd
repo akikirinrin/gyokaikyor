@@ -15,6 +15,8 @@ knitr::opts_chunk$set(
 ```
 
 ```{r setup}
+library(ggplot2)
+library(gridExtra)
 devtools::load_all()
 ```
 
@@ -37,8 +39,9 @@ df2table(maaji, year = 2017)
 df2table(maaji, year = 2018)
 df2table(maaji, year = 2019)
 ```
+### 近年の太平洋岸のマアジの主要港水揚量
 
-```{r}
+```{r, fig.width = 8, fig.height = 6}
 regional_graph(maaji,
                species_regex = "maaji",
                boundary_prefec = "\u548c\u6b4c\u5c71", # wakayama
@@ -46,21 +49,33 @@ regional_graph(maaji,
 
 ```
 
-```{r}
-# Dummy_prefec data is created becasue regional_graph requires
-# at least one data in each region
+### 月別体長階級別漁獲尾数
 
-dummy_chiba <- load_catch_dummy_kagoshima() %>% 
-  dplyr::mutate(Prefec = "千葉")
+```{r, fig.width = 8, fig.height = 16}
+bldata <-
+  parse_legacy_maaji_length_dist(
+    fname = "../tests/testthat/excel/gyokaikyo_dummy_maaji_length_dist.xlsx"
+  ) %>%
+  tidyr::drop_na(Frequency) %>%
+  dplyr::mutate(Region = dplyr::recode(Region,
+                                       "鹿児島" = "Kagoshima",
+                                       "宮～高" = "Miyazaki-Kochi",
+                                       "徳～和" = "Tokushima-Wakayama",
+                                       "三～愛" = "Mie-Aichi",
+                                       "静～神" = "Shizuoka-Kanagawa",
+                                       "千葉以北" = "Northern Chiba"
+  )) %>%
+  dplyr::mutate(Frequency = Frequency/1E5)
 
-data <- 
-  dplyr::bind_rows(load_catch_dummy_kagoshima(),
-                  dummy_chiba) %>% 
-  dplyr::mutate(Catch_ton = as.numeric(Catch_ton))
 
-regional_graph(data,
-               species_regex = "マアジ",
-               boundary_prefec = "鹿児島",
-               unit = "ton")
+ggplot(bldata %>%
+         dplyr::filter(Year %in% c(2019, 2020)),
+       aes(x = Length, y = Frequency)) +
+         geom_col(aes(fill = Region)) +
+  facet_grid(Month~Year) +
+  theme_light() +
+  xlab("Length class (cm)") +
+  ylab("Frequency (million individuals)")
+       
 
 ```
