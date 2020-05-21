@@ -39,6 +39,7 @@ df2table(maaji, year = 2017)
 df2table(maaji, year = 2018)
 df2table(maaji, year = 2019)
 ```
+### 近年の太平洋岸のマアジの主要港水揚量
 
 ```{r, fig.width = 8, fig.height = 6}
 regional_graph(maaji,
@@ -48,145 +49,33 @@ regional_graph(maaji,
 
 ```
 
-### 近年の太平洋岸のマアジの主要港水揚量
-
-```{r, fig.width = 8, fig.height = 6}
-# Dummy_prefec data is created becasue regional_graph requires
-# at least one data in each region
-
-dummy_chiba <- load_catch_dummy_kagoshima() %>% 
-  dplyr::mutate(Prefec = "千葉")
-
-data <- 
-  dplyr::bind_rows(load_catch_dummy_kagoshima(),
-                  dummy_chiba) %>% 
-  dplyr::mutate(Catch_ton = as.numeric(Catch_ton))
-
-regional_graph(data,
-               species_regex = "マアジ",
-               boundary_prefec = "鹿児島",
-               unit = "ton")
-
-```
-
 ### 月別体長階級別漁獲尾数
 
-```{r, fig.width = 8, fig.height = 20}
+```{r, fig.width = 8, fig.height = 16}
 bldata <-
   parse_legacy_maaji_length_dist(
     fname = "../tests/testthat/excel/gyokaikyo_dummy_maaji_length_dist.xlsx"
   ) %>%
   tidyr::drop_na(Frequency) %>%
   dplyr::mutate(Region = dplyr::recode(Region,
-    "鹿児島" = "Kagoshima",
-    "宮～高" = "Miyazaki-Kochi",
-    "徳～和" = "Tokushima-Wakayama",
-    "三～愛" = "Mie-Aichi",
-    "静～神" = "Shizuoka-Kanagawa",
-    "千葉以北" = "Northern Chiba"
-  ))
+                                       "鹿児島" = "Kagoshima",
+                                       "宮～高" = "Miyazaki-Kochi",
+                                       "徳～和" = "Tokushima-Wakayama",
+                                       "三～愛" = "Mie-Aichi",
+                                       "静～神" = "Shizuoka-Kanagawa",
+                                       "千葉以北" = "Northern Chiba"
+  )) %>%
+  dplyr::mutate(Frequency = Frequency/1E5)
 
-bl_201901 <-
-  ggplot2::ggplot(bldata %>%
-           dplyr::filter(Year == 2019, Month == 1)) +
-  ggplot2::geom_col(ggplot2::aes(Length, Frequency, fill = Region))
 
-bl_201902 <-
-  ggplot2::ggplot(bldata %>%
-           dplyr::filter(Year == 2019, Month == 2)) +
-  ggplot2::geom_col(ggplot2::aes(Length, Frequency, fill = Region))
-
-bl_201903 <-
-  ggplot2::ggplot(bldata %>%
-           dplyr::filter(Year == 2019, Month == 3)) +
-  ggplot2::geom_col(ggplot2::aes(Length, Frequency, fill = Region))
-
-bl_201904 <-
-  ggplot2::ggplot(bldata %>%
-           dplyr::filter(Year == 2019, Month == 4)) +
-  ggplot2::geom_col(ggplot2::aes(Length, Frequency, fill = Region))
-
-bl_201905 <-
-  ggplot2::ggplot(bldata %>%
-           dplyr::filter(Year == 2019, Month == 5)) +
-  ggplot2::geom_col(ggplot2::aes(Length, Frequency, fill = Region))
-
-bl_201906 <-
-  ggplot2::ggplot(bldata %>%
-           dplyr::filter(Year == 2019, Month == 6)) +
-  ggplot2::geom_col(ggplot2::aes(Length, Frequency, fill = Region))
-
-bl_201907 <-
-  ggplot2::ggplot(bldata %>%
-           dplyr::filter(Year == 2019, Month == 7)) +
-  ggplot2::geom_col(ggplot2::aes(Length, Frequency, fill = Region))
-
-bl_201908 <-
-  ggplot2::ggplot(bldata %>%
-           dplyr::filter(Year == 2019, Month == 8)) +
-  ggplot2::geom_col(ggplot2::aes(Length, Frequency, fill = Region))
-
-bl_201909 <-
-  ggplot2::ggplot(bldata %>%
-           dplyr::filter(Year == 2019, Month == 9)) +
-  ggplot2::geom_col(ggplot2::aes(Length, Frequency, fill = Region))
-
-bl_201910 <-
-  ggplot2::ggplot(bldata %>%
-           dplyr::filter(Year == 2019, Month == 10)) +
-  ggplot2::geom_col(ggplot2::aes(Length, Frequency, fill = Region))
-
-bl_201911 <-
-  ggplot2::ggplot(bldata %>%
-           dplyr::filter(Year == 2019, Month == 11)) +
-  ggplot2::geom_col(ggplot2::aes(Length, Frequency, fill = Region))
-
-bl_201912 <-
-  ggplot2::ggplot(bldata %>%
-           dplyr::filter(Year == 2019, Month == 12)) +
-  ggplot2::geom_col(ggplot2::aes(Length, Frequency, fill = Region))
-
-bl_202001 <-
-  ggplot2::ggplot(bldata %>%
-           dplyr::filter(Year == 2020, Month == 1)) +
-  ggplot2::geom_col(ggplot2::aes(Length, Frequency, fill = Region))
-
-bl_202002 <-
-  ggplot2::ggplot(bldata %>%
-           dplyr::filter(Year == 2020, Month == 2)) +
-  ggplot2::geom_col(ggplot2::aes(Length, Frequency, fill = Region))
-
-g_legend<-function(a.gplot){
-  tmp <- ggplot2::ggplot_gtable(ggplot2::ggplot_build(a.gplot))
-  leg <- which(sapply(tmp$grobs, function(x) x$name) == "guide-box")
-  legend <- tmp$grobs[[leg]]
-  return(legend)}
-
-mylegend <- g_legend(bl_201901)
-gridExtra::grid.arrange(
-gridExtra::arrangeGrob(
-  bl_201901 + theme(legend.position="none"),
-  bl_201902 + theme(legend.position="none"),
-  bl_201903 + theme(legend.position="none"),
-  bl_201904 + theme(legend.position="none"),
-  bl_201905 + theme(legend.position="none"),
-  bl_201906 + theme(legend.position="none"),
-  bl_201907 + theme(legend.position="none"),
-  bl_201908 + theme(legend.position="none"),
-  bl_201909 + theme(legend.position="none"),
-  bl_201910 + theme(legend.position="none"),
-  bl_201911 + theme(legend.position="none"),
-  bl_201912 + theme(legend.position="none"),
-  ncol = 1),
-gridExtra::arrangeGrob(
-  bl_202001 + theme(legend.position="none"),
-  bl_202002 + theme(legend.position="none"),
-  ncol = 1,
-  nrow = 12
-),
-mylegend,
-ncol =3,
-widths = c(5,5,5)
-)
+ggplot(bldata %>%
+         dplyr::filter(Year %in% c(2019, 2020)),
+       aes(x = Length, y = Frequency)) +
+         geom_col(aes(fill = Region)) +
+  facet_grid(Month~Year) +
+  theme_light() +
+  xlab("Length class (cm)") +
+  ylab("Frequency (million individuals)")
+       
 
 ```
