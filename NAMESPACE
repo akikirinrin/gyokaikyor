@@ -2,6 +2,7 @@
 
 export("%>%")
 export(df2table)
+export(plot_catch_at_age)
 export(regional_graph)
 export(set_region_by_two)
 export(xl2df)
