@@ -3,9 +3,9 @@
 #' @param fname Legacy Excel data
 #' @param year Newest year reported
 #' @param spcs Spcies name such as: \itemize{\item{'maaji'}}
-legacy <- function(fname, year, spcs) {
+legacy <- function(fname, year, type, spcs) {
   structure(list(fname = fname, year = year, spcs = spcs,
-                 data = NULL), class = spcs)
+                 data = NULL), class = paste(type, spcs, sep = "_"))
 }
 
 #' Parse legacy Excel data into data frame
@@ -16,7 +16,7 @@ legacy <- function(fname, year, spcs) {
 #' \item{spcs}
 #' \item{year}
 #' }
-parse_legacy <- function(legacy) {
+parse_catch_legacy <- function(legacy) {
   assert_that(has_name(legacy, c("fname", "spcs", "year")))
   lucifer::rebel(legacy$fname, sheet_regex = generate_prefec(sep = "|"),
                  cluster = list(dir = "v",
@@ -54,9 +54,9 @@ parse <- function(x) {
 
 #' Parse maaji object into data frame
 #'
-#' @param maaji Object instanciated by \code{legacy()}
-parse.maaji <- function(maaji) {
-  parse_legacy(maaji) %>%
+#' @param catch_maaji Object instanciated by \code{legacy()}
+parse.catch_maaji <- function(catch_maaji) {
+  parse_catch_legacy(catch_maaji) %>%
     dplyr::mutate(Catch_ton = dplyr::if_else(Prefec == "静岡",
                                              as.double(Catch_ton) / 1000,
                                              as.double(Catch_ton)))
@@ -66,7 +66,7 @@ parse.maaji <- function(maaji) {
 #'
 #' @inheritParams legacy
 #' @export
-xl2df <- function(fname, year, spcs) {
-  legacy(fname, year = year, spcs = spcs) %>%
+xl2df <- function(fname, year, type, spcs) {
+  legacy(fname, year = year, type = type, spcs = spcs) %>%
     parse()
 }
