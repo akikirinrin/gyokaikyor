@@ -10,13 +10,15 @@ vignette: >
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>"
+  comment = "#>",
+  cache = TRUE
 )
 ```
 
 ```{r setup}
 library(ggplot2)
 library(gridExtra)
+library(cowplot)
 devtools::load_all()
 ```
 
@@ -132,4 +134,17 @@ ggplot(bldata %>%
   ylab("Frequency (million individuals)")
        
 
+```
+
+### 年齢別漁獲尾数
+
+```{r catch_at_age, fig.width = 9, message = FALSE, warning = FALSE}
+caa_maaji <- xl2df(fname = "../tests/testthat/excel/catch_at_age_maaji.xlsx",
+                   year = year,
+                   type = "catch_at_age",
+                   spcs = spcs)
+plot_grid(
+  plot_catch_at_age(caa_maaji, type = "Nourin_adjusted"),
+  plot_catch_at_age(caa_maaji, type = "Major_ports")
+)
 ```
