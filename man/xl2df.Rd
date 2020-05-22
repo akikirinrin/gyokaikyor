@@ -4,7 +4,7 @@
 \alias{xl2df}
 \title{Convert legacy Excel to data frome}
 \usage{
-xl2df(fname, year, spcs)
+xl2df(fname, year, type, spcs)
 }
 \arguments{
 \item{fname}{Legacy Excel data}
