@@ -54,13 +54,34 @@ test_that("", {
   )
 })
 
-context("- xl2df()")
+context("- parse_catch_at_age_legacy()")
 
-test_that("Excel is parsed into df", {
+test_that("parse_catch_at_age_legacy() works", {
+  expect_df_with_na_coercion(
+    parse_catch_at_age_legacy(
+      list(fname = "excel/catch_at_age_maaji.xlsx",
+           spcs  = "maaji",
+           year  = 2019)
+    )
+  )
+})
+
+context("- xl2df() parses Excel files into df")
+
+test_that("catch", {
   expect_df_with_na_coercion(
      xl2df(fname = "excel/gyokaikyo_dummy_maaji.xlsx",
            year  = 2019,
            type  = "catch",
+           spcs  = "maaji")
+  )
+})
+
+test_that("catch at age", {
+  expect_df_with_na_coercion(
+     xl2df(fname = "excel/catch_at_age_maaji.xlsx",
+           year  = 2019,
+           type  = "catch_at_age",
            spcs  = "maaji")
   )
 })
