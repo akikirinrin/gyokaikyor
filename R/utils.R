@@ -36,3 +36,11 @@ set_region_by_two <- function(prefec, boundary_prefec) {
 `%not_in%` <- function(x, y) {
   all(!(x %in% y))
 }
+
+#' Generate logarithmic sequence
+#'
+#' @inheritParams base::seq
+#' @export
+seq_log <- function(from, to = from, by = 1) {
+  purrr::map_dbl(seq(from, to, by = by), function(x) 10 ^ x)
+}
