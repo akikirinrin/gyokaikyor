@@ -10,23 +10,81 @@ vignette: >
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>"
+  comment = "#>",
+  cache = TRUE
 )
 ```
 
 ```{r setup}
+library(ggplot2)
+library(gridExtra)
+library(cowplot)
 devtools::load_all()
 ```
 
-This is a sample vignette.
+# マアジ太平洋系群等の漁況予報
 
-## マアジ
+----
+
+## 今後の見通し （2020年1月～6月）
+対象海域：北薩～熊野灘、相模湾 <br>
+対象漁業：まき網、定置網 <br>
+対象魚群：0歳魚（2020年級群）、1歳魚（2019年級群）、2歳魚（2018年級群）、3歳（2017年級群）以上。年初に加齢、魚体は尾叉長。
+
+1. 北薩～土佐湾（まき網、定置網）
+    1. 来遊量：北薩～薩南海域、宿毛湾・土佐湾では極めて低調であった前年を上回る。日向灘では前年を下回る。豊後水道では前年並。
+    1. 魚　体：北薩～薩南海域では1歳魚、2歳魚主体、日向灘、豊後水道では1歳魚主体、宿毛湾・土佐湾では0歳魚、1歳魚主体。0歳魚は14 cm以下、1歳魚は14 cm～20 cm、2歳以上は20 cm以上。
+
+1. 紀伊水道外域～熊野灘（まき網、定置網）
+    1. 来遊量：紀伊水道外域西部では前年並。紀伊水道外域東部では極めて低調であった前年を上回る。熊野灘では前年を下回る。
+    1. 魚　体：紀伊水道外域東部では1歳魚～4歳魚主体、熊野灘では1歳魚主体。0歳魚は12 cm以下、1歳魚は14 cm～21 cm、2歳以上は21 cm以上。
+
+1. 相模湾（定置網）
+    1. 来遊量：前年を上回る。
+    1. 魚　体：主体となる1歳魚は15 cm～20 cm。
+    
+----
+
+
+### 漁況の経過（2019年7月～11月）および見通し（2020年1月～6月）についての説明
+
+#### 1．資源状態
+資源量は1986年以降増加し、1990年代半ばは15万トン～16万トンと高い水準で推移したが、1997年以降減少した。2009年～2013年は横ばいで推移したが、その後再び減少している。加入量は1993年をピークに減少し、2009年以降3.2億尾～7.1億尾と低い水準で推移している。2019年度の資源評価において、2018年の資源量は4.3万トン、親魚量が2.3万トンと推定され、資源水準は低位、動向は減少と判断された。
+2017年級群（3歳魚）の加入量は4.2億尾と推定され、2019年後半の漁獲は低調に推移しており、残存資源量は少ない。
+2018年級群（2歳魚）の加入量は3.6億尾と推定された。低水準ながら2019年前半の漁獲の主体となったが、2019年後半の漁獲は低調に推移しており、残存資源量は少ないと考えられる。
+2019年級群（1歳魚）は、いずれの海域でも漁獲対象になる。加入量の指標となる各県地先の漁況は、宮崎県南部定置網アジ仔CPUE（4月～6月）、宿毛湾まき網ゼンゴ資源量指数（4月～11月）、伊勢湾小型底びき網（まめ板）当歳魚漁獲量（4月～11月）は前年を下回り、宇和島港まき網ゼンゴCPUE（4月～11月）および串本棒受網当歳魚漁獲量（5月～6月）は前年を上回った。4月～11月の指標値の相乗平均は2018年級群を下回ることから、2019年級群の加入量は2018年級群を下回ると考えられる。
+2020年級群（0歳魚）は期後半から漁獲されると考えられるが、現時点での予測は困難である。
+
+#### 2．来遊量、漁期・漁場
+本魚種は予測期間を通じて漁獲対象となる。来遊量については、海域ごとに、前期の漁況に基づき予測した。年齢別体長は、これまでの体長組成の推移から概ね次のとおりである。0歳魚：14 cm以下、1歳魚：15 cm～20 cm、2歳魚：21 cm～24 cm、3歳以上：25 cm以上。3歳以上の年齢に対応した体長区分は現状では困難である。
+
+##### （1）北薩～土佐湾
+北薩～薩南海域では、1歳魚、2歳魚（2019年級群、2018年級群）が漁獲の主体となる。1月～6月の漁獲量は、前年7月～12月の漁獲量と正の関係が認められる。2019年7月～12月は前年を下回っているが、2019年1月～6月は予測を大幅に下回ったことから、今期の来遊量は前年を上回ると予測される。
+日向灘では、1歳魚（2019年級群）が漁獲の主体となる。日向灘のまき網は、日向灘前年7月～12月漁獲量、愛媛県（宇和海南部）前年8月～11月まき網漁獲量および高知県（宿毛湾）前年7月～11月まき網漁獲量の相乗平均値により漁獲動向を判断している。これらの指標値が前年を下回ることから、今期の来遊量は前年を下回ると予測される。
+豊後水道南部西側では、1歳魚（2019年級群）が漁獲の主体となる。0歳魚が漁獲の主体であった2019年7月～11月の漁獲量は2018年同期を上回ったが、近年の資源水準と低い加入量および前年が直近年の中でも比較的好漁であったことを考慮し、今期の来遊量は前年並と予測される。
+豊後水道南部東側では、1歳魚（2019年級群）が漁獲の主体で、0歳魚（2020年級群）も混じる。1歳魚以上の当海域における2019年の漁獲量がほぼ前年並であったことから、今期の来遊量は前年並と予測される。
+宿毛湾・土佐湾では、0歳魚（2020年級群）と1歳魚（2019年級群）が主体となる。宿毛湾まき網の前年下半期漁獲量と上半期漁獲量には正の関係が認められる。2019年7月～12月は前年を下回っているが、2019年1月～6月は予測を大幅に下回ったことから、今期の来遊量は前年を上回ると予測される。
+
+##### （2）紀伊水道外域～熊野灘
+紀伊水道外域西部では、2019年7月～11月は0歳魚が漁獲の主体となり、漁獲量は前年同期並であった。近年の漁獲動向から、今期の来遊量は前年並と予測される。
+紀伊水道外域東部では、1歳魚～4歳魚（2019年級群～2016年級群）が漁獲の主体となる。2019年1月～6月のまき網全体での漁獲量は1989年以降で二番目に少なかった。漁場の海況(紀伊半島を北進する黒潮由来の暖水波及状況)に大きな変化がみられない可能性があるが、今期の来遊量は歴史的不漁であった前年を上回ると予測される。
+熊野灘では、まき網、定置網の7月～11月の漁況から、主体となる1歳魚（2019年級群）は前年を下回ると考えられる。期後半に定置網で漁獲される0歳魚（2020年級群）については海況の経過が前年に類似すると予測されることから前年並と予測される。2歳以上は少ない。以上から、今期の来遊量は前年を下回ると予測される。
+
+##### （3）相模湾
+伊豆東岸では、1歳魚（2019年級群）が漁獲の主体となる。4月～11月の0歳魚の漁獲尾数と翌年1月～6月の1歳魚以上の漁獲尾数には正の関係が認められ、これらの関係から今期の来遊量は前年を上回ると予測される。
+西湘地区では、1歳魚（2019年級群）が漁獲の主体となる。2019年7月～11月の相模湾でのジンダ漁獲量は近年では高い水準であったことから、今期の来遊量は前年を上回ると予測される。
+
+##### （4）房総～三陸海域の漁獲情報
+房総～鹿島灘海域における北部まき網の2019年7月～11月の漁獲量は1,372トンとなり、前年同期47トンを大きく上回った。仙台湾～三陸海域では、宮城県の2019年7月～11月の漁獲量は823トン、岩手県の2019年7月～11月の定置網による漁獲量は164トンで、それぞれ前年を上回った。青森県では2019年7月～11月に八戸の漁獲量は0.2トン、平舘の定置網による漁獲量は88トンであった。
+
+
 
 ```{r}
 year <- 2019
 spcs <- "maaji"
 maaji <- xl2df(fname = "../tests/testthat/excel/gyokaikyo_dummy_maaji.xlsx",
                year = year,
+               type = "catch",
                spcs = spcs)
 ```
 
@@ -37,8 +95,9 @@ df2table(maaji, year = 2017)
 df2table(maaji, year = 2018)
 df2table(maaji, year = 2019)
 ```
+### 近年の太平洋岸のマアジの主要港水揚量
 
-```{r}
+```{r, fig.width = 8, fig.height = 6}
 regional_graph(maaji,
                species_regex = "maaji",
                boundary_prefec = "\u548c\u6b4c\u5c71", # wakayama
@@ -46,21 +105,75 @@ regional_graph(maaji,
 
 ```
 
-```{r}
-# Dummy_prefec data is created becasue regional_graph requires
-# at least one data in each region
+### 月別体長階級別漁獲尾数
 
-dummy_chiba <- load_catch_dummy_kagoshima() %>% 
-  dplyr::mutate(Prefec = "千葉")
+```{r, fig.width = 8, fig.height = 16}
+bldata <-
+  parse_legacy_maaji_length_dist(
+    fname = "../tests/testthat/excel/gyokaikyo_dummy_maaji_length_dist.xlsx"
+  ) %>%
+  tidyr::drop_na(Frequency) %>%
+  dplyr::mutate(Region = dplyr::recode(Region,
+                                       "鹿児島" = "Kagoshima",
+                                       "宮～高" = "Miyazaki-Kochi",
+                                       "徳～和" = "Tokushima-Wakayama",
+                                       "三～愛" = "Mie-Aichi",
+                                       "静～神" = "Shizuoka-Kanagawa",
+                                       "千葉以北" = "Northern Chiba"
+  )) %>%
+  dplyr::mutate(Frequency = Frequency/1E5)
 
-data <- 
-  dplyr::bind_rows(load_catch_dummy_kagoshima(),
-                  dummy_chiba) %>% 
-  dplyr::mutate(Catch_ton = as.numeric(Catch_ton))
 
-regional_graph(data,
-               species_regex = "マアジ",
-               boundary_prefec = "鹿児島",
-               unit = "ton")
+ggplot(bldata %>%
+         dplyr::filter(Year %in% c(2019, 2020)),
+       aes(x = Length, y = Frequency)) +
+         geom_col(aes(fill = Region)) +
+  facet_grid(Month~Year) +
+  theme_light() +
+  xlab("Length class (cm)") +
+  ylab("Frequency (million individuals)")
+       
 
+```
+
+### 年齢別漁獲尾数
+
+```{r catch_at_age, fig.width = 9, message = FALSE, warning = FALSE}
+caa_maaji <- xl2df(fname = "../tests/testthat/excel/catch_at_age_maaji.xlsx",
+                   year = year,
+                   type = "catch_at_age",
+                   spcs = spcs)
+plot_grid(
+  plot_catch_at_age(caa_maaji, type = "Nourin_adjusted"),
+  plot_catch_at_age(caa_maaji, type = "Major_ports")
+)
+```
+
+### 加入量指標
+
+```{r, echo = FALSE, fig.height = 4.5, fig.width = 9, message = FALSE, warning = FALSE}
+  
+ybreaks <- seq_log(-3, 3)
+
+plot_rawdata <-
+  parse_index("../tests/testthat/excel/index_maaji.xlsx", 2019,
+            type = "rawdata") %>%
+  ggplot(aes(Year, LogIndex, group = Place, color = Place)) +
+  geom_line(size = 1.2) +
+  scale_y_log10(breaks = ybreaks,labels = ybreaks) +
+  theme_bw(base_size = 14) +
+  theme(legend.text = element_text(size = 10))
+
+plot_geomean <-
+  parse_index("../tests/testthat/excel/index_maaji.xlsx", 2019,
+            type = "geomean") %>%
+  dplyr::filter(Period %in% c("4-翌3月", "4-翌2月"),
+                Place == "指標値の_(宮崎~千葉)") %>%
+  ggplot(aes(Year, Geomean, group = Period, color = Period)) +
+  geom_line(size = 1.2) +
+  scale_y_log10(breaks=ybreaks,labels = ybreaks) +
+  theme_bw(base_size = 14) +
+  theme(legend.text = element_text(size = 10))
+
+plot_grid(plot_rawdata, plot_geomean)
 ```

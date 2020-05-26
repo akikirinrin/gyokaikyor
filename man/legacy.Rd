@@ -4,7 +4,7 @@
 \alias{legacy}
 \title{Constructor for legacy Excel data}
 \usage{
-legacy(fname, year, spcs)
+legacy(fname, year, type, spcs)
 }
 \arguments{
 \item{fname}{Legacy Excel data}
