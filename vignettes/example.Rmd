@@ -162,9 +162,9 @@ plot_rawdata <-
   theme_bw(base_size = 14) +
   theme(legend.text = element_text(size = 10))
 
-dat_geomean <- parse_index("../tests/testthat/excel/index_maaji.xlsx", 2019,
-            type = "geomean") %>%
 plot_geomean <-
+  parse_index("../tests/testthat/excel/index_maaji.xlsx", 2019,
+            type = "geomean") %>%
   dplyr::filter(Period %in% c("4-翌3月", "4-翌2月"),
                 Place == "指標値の_(宮崎~千葉)") %>%
   ggplot(aes(Year, Geomean, group = Period, color = Period)) +
