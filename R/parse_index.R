@@ -48,7 +48,8 @@ parse_index <- function(fname, year, type) {
                           names_to = "Place",
                           values_to = "Geomean") %>%
       tidyr::separate(Place, c("Place", "Period"), sep = "_(?=[0-9])") %>%
-      dplyr::mutate(Geomean = as.double(Geomean))
+      dplyr::mutate(Geomean = as.double(Geomean),
+                    Place = factor(Place))
   } else {
     stop("type must be either 'rawdata' or 'geomean'")
   }

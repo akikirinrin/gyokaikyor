@@ -149,15 +149,29 @@ plot_grid(
 )
 ```
 ### 加入量指標
-```{r, echo = FALSE, fig.height = 4.5, fig.width = 7}
-indexdata <- 
-  parse_index("../tests/testthat/excel/index_maaji.xlsx", 2019) %>%
+```{r, echo = FALSE, fig.height = 4.5, fig.width = 9, message = FALSE, warning = FALSE}
   
-ybreaks <- c(0.001, 0.01, 0.1, 1, 10, 100, 1000)
+ybreaks <- seq_log(-3, 3)
 
-ggplot(indexdata, aes(Year, LogIndex, group = Place, color = Place)) +
+plot_rawdata <-
+  parse_index("../tests/testthat/excel/index_maaji.xlsx", 2019,
+            type = "rawdata") %>%
+  ggplot(aes(Year, LogIndex, group = Place, color = Place)) +
   geom_line(size = 1.2) +
-  scale_y_log10(breaks=ybreaks,labels=ybreaks) +
+  scale_y_log10(breaks = ybreaks,labels = ybreaks) +
   theme_bw(base_size = 14) +
-  theme(legend.text=element_text(size=10))
+  theme(legend.text = element_text(size = 10))
+
+dat_geomean <- parse_index("../tests/testthat/excel/index_maaji.xlsx", 2019,
+            type = "geomean") %>%
+plot_geomean <-
+  dplyr::filter(Period %in% c("4-翌3月", "4-翌2月"),
+                Place == "指標値の_(宮崎~千葉)") %>%
+  ggplot(aes(Year, Geomean, group = Period, color = Period)) +
+  geom_line(size = 1.2) +
+  scale_y_log10(breaks=ybreaks,labels = ybreaks) +
+  theme_bw(base_size = 14) +
+  theme(legend.text = element_text(size = 10))
+
+plot_grid(plot_rawdata, plot_geomean)
 ```
