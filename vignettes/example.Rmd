@@ -152,11 +152,6 @@ plot_grid(
 ```{r, echo = FALSE, fig.height = 4.5, fig.width = 7}
 indexdata <- 
   parse_index("../tests/testthat/excel/index_maaji.xlsx", 2019) %>%
-  dplyr::rename(Month = WHAT_IS_THIS) %>%
-  dplyr::mutate(Place = str_remove(Place, "①|②|③|④|⑤|⑥"),
-                Place = factor(Place),
-                Year = as.integer(Year),
-                LogIndex = as.double(LogIndex))
   
 ybreaks <- c(0.001, 0.01, 0.1, 1, 10, 100, 1000)
 
