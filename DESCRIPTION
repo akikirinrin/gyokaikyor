@@ -1,6 +1,6 @@
 Package: gyokaikyor
 Title: What the Package Does (One Line, Title Case)
-Version: 0.3.0
+Version: 0.4.0
 Authors@R: 
     person(given = "First",
            family = "Last",
@@ -26,11 +26,15 @@ Imports:
     testthat,
     knitr,
     rmarkdown,
-    lucifer (>= 0.2.0.9000)
+    lucifer (>= 0.2.0.9000),
+    assertthat,
+    kableExtra,
+    forcats,
+    ggplot2
 Suggests: 
     usethis,
     covr,
     lintr
 VignetteBuilder: knitr
-Remotes:  
+Remotes: 
     akikirinrin/lucifer
