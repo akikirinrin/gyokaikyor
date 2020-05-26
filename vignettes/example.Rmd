@@ -148,7 +148,9 @@ plot_grid(
   plot_catch_at_age(caa_maaji, type = "Major_ports")
 )
 ```
+
 ### 加入量指標
+
 ```{r, echo = FALSE, fig.height = 4.5, fig.width = 9, message = FALSE, warning = FALSE}
   
 ybreaks <- seq_log(-3, 3)
