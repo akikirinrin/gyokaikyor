@@ -80,12 +80,15 @@ devtools::load_all()
 
 
 ```{r}
-year <- 2019
-spcs <- "maaji"
+year  <- 2019
+spcs  <- "maaji"
 maaji <- xl2df(fname = "../tests/testthat/excel/gyokaikyo_dummy_maaji.xlsx",
                year = year,
                type = "catch",
                spcs = spcs)
+xl2df
+print(ls())
+print(getwd())
 ```
 
 ### 表
