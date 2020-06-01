@@ -59,7 +59,9 @@ parse <- function(x) {
 parse.catch_maaji <- function(catch_maaji) {
   parse_catch_legacy(catch_maaji) %>%
     dplyr::mutate(Catch_ton = dplyr::if_else(Prefec == "静岡",
-                                             Catch_ton / 1000,
+                                             dplyr::if_else(Fishery == "定置網",
+                                                     Catch_ton / 1000,
+                                                     Catch_ton),
                                              Catch_ton))
 }
 
