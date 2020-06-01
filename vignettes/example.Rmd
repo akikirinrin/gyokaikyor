@@ -81,18 +81,16 @@ devtools::load_all()
 
 
 
-```{r}
+```{r, echo = FALSE, warning = FALSE, message = FALSE}
 year  <- 2019
 spcs  <- "maaji"
 maaji <- xl2df(fname = "../tests/testthat/excel/gyokaikyo_dummy_maaji.xlsx",
                year = year,
                type = "catch",
                spcs = spcs) %>%
-  dplyr::filter(Fishery != "全漁業")
-
-xl2df
-print(ls())
-print(getwd())
+  dplyr::filter(dplyr::if_else(Prefec == "静岡", 
+                               Fishery == "全漁業", # 静岡県のみ全漁業を使用
+                               Fishery != "全漁業")) # 他県は全漁業以外の合計値
 ```
 
 ### 表
