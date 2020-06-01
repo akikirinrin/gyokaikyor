@@ -192,11 +192,9 @@ plot_grid(
 
 ```{r, echo = FALSE, fig.height = 4.5, fig.width = 9, message = FALSE, warning = FALSE}
 
-fpath <- "/home/rstudio/exceldir/202003/マアジ/2 加入量指数の計算/✅20200325漁海況　マアジ加入量.xlsx"
+indexdata <- parse_index("../tests/testthat/excel/index_maaji.xlsx", 2019, "geomean")
 
-dat <- parse_index(fpath, 2019, "geomean")
-
-foo <- dat %>% dplyr::filter(Year >= 2006) %>%
+foo <- indexdata %>% dplyr::filter(Year >= 2006) %>%
   dplyr::mutate(LocPer = paste0(Place, "Z", Period)) %>%
   dplyr::mutate(Geomean = round(Geomean, digits = 2)) %>%
   dplyr::select(Year, LocPer, Geomean) %>%
