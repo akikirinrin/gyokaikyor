@@ -21,6 +21,7 @@ library(gridExtra)
 library(cowplot)
 library(scales)
 library(patchwork)
+library(kableExtra)
 devtools::load_all()
 ```
 
@@ -190,6 +191,36 @@ plot_grid(
 ### 加入量指標
 
 ```{r, echo = FALSE, fig.height = 4.5, fig.width = 9, message = FALSE, warning = FALSE}
+
+fpath <- "/home/rstudio/exceldir/202003/マアジ/2 加入量指数の計算/✅20200325漁海況　マアジ加入量.xlsx"
+
+dat <- parse_index(fpath, 2019, "geomean")
+
+foo <- dat %>% dplyr::filter(Year >= 2006) %>%
+  dplyr::mutate(LocPer = paste0(Place, "Z", Period)) %>%
+  dplyr::mutate(Geomean = round(Geomean, digits = 2)) %>%
+  dplyr::select(Year, LocPer, Geomean) %>%
+  tidyr::pivot_wider(names_from = LocPer, values_from = Geomean) %>%
+  dplyr::rename(年 = Year)
+
+season_names <-
+  colnames(foo) %>%
+  stringr::str_extract("年|(?<=Z).+")
+
+knitr::kable(foo, "html", booktabs = T,
+             col.names = season_names) %>%
+  kable_styling(font_size = 10) %>% 
+             add_header_above(c("",
+                              "宮崎南部\n定置網\nアジ仔CPUE",
+                              "愛媛県まき網\n\n宇和島港\nゼンゴCPUE"=2,
+                              "高知県まき\n\n宿毛湾ゼンゴ\n資源量指数"=2,
+                              "串本\n棒受網\n当歳魚\n漁獲量",
+                              "伊勢湾\n豆板漁業\n当歳魚\n漁獲量"=2,
+                              "千葉県定置網\n\n当歳魚\n漁獲量"=2,
+                              "伊豆東岸定置*\n\n当歳魚\n漁獲量"=2,
+                              "指標値の\n相乗平均\n\n(宮崎~千葉)"=2
+                              )) %>%
+  footnote(general = "* 資源評価には使っていない指標値。相乗平均の計算にも含んでいない。", general_title = "")
   
 ybreaks <- seq_log(-3, 3)
 
