@@ -19,6 +19,8 @@ knitr::opts_chunk$set(
 library(ggplot2)
 library(gridExtra)
 library(cowplot)
+library(scales)
+library(patchwork)
 devtools::load_all()
 ```
 
@@ -79,16 +81,16 @@ devtools::load_all()
 
 
 
-```{r}
+```{r, echo = FALSE, warning = FALSE, message = FALSE}
 year  <- 2019
 spcs  <- "maaji"
 maaji <- xl2df(fname = "../tests/testthat/excel/gyokaikyo_dummy_maaji.xlsx",
                year = year,
                type = "catch",
-               spcs = spcs)
-xl2df
-print(ls())
-print(getwd())
+               spcs = spcs) %>%
+  dplyr::filter(dplyr::if_else(Prefec == "静岡", 
+                               Fishery == "全漁業", # 静岡県のみ全漁業を使用
+                               Fishery != "全漁業")) # 他県は全漁業以外の合計値
 ```
 
 ### 表
@@ -100,13 +102,46 @@ df2table(maaji, year = 2019)
 ```
 ### 近年の太平洋岸のマアジの主要港水揚量
 
-```{r, fig.width = 8, fig.height = 6}
-regional_graph(maaji,
-               species_regex = "maaji",
-               boundary_prefec = "\u548c\u6b4c\u5c71", # wakayama
-               unit = "ton")
+```{r, fig.width = 8, fig.height = 6, echo = FALSE, warning = FALSE, message = FALSE}
+catch_maaji <-
+  maaji %>%
+  dplyr::mutate(Region = set_region_by_two(Prefec, "和歌山")) %>%
+  dplyr::group_by(Year, Month, Region, Prefec) %>%
+  dplyr::summarize(Catch = sum(Catch_ton/1000, na.rm = TRUE),
+                   Fishery = "全漁業") %>%
+  dplyr::mutate(Date = as.Date(paste(Year, Month, "01", sep = "-"))) %>%
+  dplyr::filter(Prefec != "北海道")
+
+westpac <- 
+  ggplot(catch_maaji %>% dplyr::filter(Region == "和歌山以西"),
+         aes(x = Date, y = Catch, group = Prefec, fill = Prefec)) +
+  geom_col() +
+  theme_bw(base_size = 10) +
+  scale_x_date(limits = as.Date(c("2012-12-01", "2020-01-01")),
+               date_breaks = "6 months") +
+  coord_cartesian(ylim = c(0, NA)) +     # 実際の漁獲量を扱う場合は ylim = c(0, 4)
+  theme(legend.title = element_blank(),
+        axis.text.x = element_blank()) + # 上の図はx-axis legendがない
+  labs(x = "", y = "漁獲量 (千トン)")
+
+eastpac <- 
+  ggplot(catch_maaji %>% dplyr::filter(Region == "三重以東"),
+         aes(x = Date, y = Catch, group = Prefec, fill = Prefec)) +
+  geom_col() +
+  theme_bw(base_size = 10) +
+  scale_x_date(limits = as.Date(c("2012-12-01", "2020-01-01")),
+               labels = date_format("%Y-%m"),
+               date_breaks = "6 months") +
+  coord_cartesian(ylim = c(0, NA)) +     # 実際の漁獲量を扱う場合は ylim = c(0, 4)
+  theme(legend.title=element_blank(),
+        axis.text.x = element_text(angle = 90, hjust = 1))  +
+  labs(x = "", y = "漁獲量 (千トン)")
+
+westpac + eastpac + patchwork::plot_layout(nrow = 2)
 
 ```
+
+### 図 近年の太平洋岸のマアジの主要港水揚量 上：和歌山以西，下：三重以東
 
 ### 月別体長階級別漁獲尾数
 

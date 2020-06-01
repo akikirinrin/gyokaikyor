@@ -36,7 +36,9 @@ Suggests:
     usethis,
     covr,
     lintr,
-    cowplot
+    cowplot,
+    scales,
+    patchwork
 VignetteBuilder: knitr
 Remotes: 
     akikirinrin/lucifer
