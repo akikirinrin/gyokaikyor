@@ -3,9 +3,18 @@
 #' @param dat Data to be processed
 finalize_df <- function(dat) {
   ideal_columns <-
-    c("Year", "Month", "Prefec", "Location", "Fishery",
-      "Species", "Meigara", "Catch_ton", "Fname", "Sheet", "Note") %>%
-    purrr::map_dfr(~tibble::tibble(!!.x := logical()))
+    data.frame(Year             = integer(),
+               Month            = integer(),
+               Prefec           = character(),
+               Location         = character(),
+               Fishery          = character(),
+               Species          = character(),
+               Meigara          = character(),
+               Catch_ton        = double(),
+               Fname            = character(),
+               sheet            = character(),
+               Note             = character(),
+               stringsAsFactors = FALSE)
 
   processed <- dat %>%
     magrittr::set_colnames(stringr::str_to_title(colnames(dat))) %>%
