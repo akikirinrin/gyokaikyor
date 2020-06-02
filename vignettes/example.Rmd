@@ -116,7 +116,7 @@ catch_maaji <-
 westpac <- 
   ggplot(catch_maaji %>% dplyr::filter(Region == "和歌山以西"),
          aes(x = Date, y = Catch, group = Prefec, fill = Prefec)) +
-  geom_col() +
+  geom_col(size = 0.1, color = "black") +
   theme_bw(base_size = 10) +
   scale_x_date(limits = as.Date(c("2012-12-01", "2020-01-01")),
                date_breaks = "6 months") +
@@ -128,7 +128,7 @@ westpac <-
 eastpac <- 
   ggplot(catch_maaji %>% dplyr::filter(Region == "三重以東"),
          aes(x = Date, y = Catch, group = Prefec, fill = Prefec)) +
-  geom_col() +
+  geom_col(size = 0.1, color = "black") +
   theme_bw(base_size = 10) +
   scale_x_date(limits = as.Date(c("2012-12-01", "2020-01-01")),
                labels = date_format("%Y-%m"),
