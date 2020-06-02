@@ -91,15 +91,16 @@ maaji <- xl2df(fname = "../tests/testthat/excel/gyokaikyo_dummy_maaji.xlsx",
                spcs = spcs) %>%
   dplyr::filter(dplyr::if_else(Prefec == "静岡", 
                                Fishery == "全漁業", # 静岡県のみ全漁業を使用
-                               Fishery != "全漁業")) # 他県は全漁業以外の合計値
+                               Fishery != "全漁業")) %>%# 他県は全漁業以外の合計値
+  dplyr::filter(Prefec != "北海道") # 資源評価では北海道を使用しない
 ```
 
 ### 表
-```{r}
-df2table(maaji, year = 2016)
+```{r, echo = FALSE}
+#df2table(maaji, year = 2016)
 df2table(maaji, year = 2017)
-df2table(maaji, year = 2018)
-df2table(maaji, year = 2019)
+df2table(maaji, year = 2018, header = FALSE)
+df2table(maaji, year = 2019, header = FALSE)
 ```
 ### 近年の太平洋岸のマアジの主要港水揚量
 
@@ -110,8 +111,7 @@ catch_maaji <-
   dplyr::group_by(Year, Month, Region, Prefec) %>%
   dplyr::summarize(Catch = sum(Catch_ton/1000, na.rm = TRUE),
                    Fishery = "全漁業") %>%
-  dplyr::mutate(Date = as.Date(paste(Year, Month, "01", sep = "-"))) %>%
-  dplyr::filter(Prefec != "北海道")
+  dplyr::mutate(Date = as.Date(paste(Year, Month, "01", sep = "-"))) 
 
 westpac <- 
   ggplot(catch_maaji %>% dplyr::filter(Region == "和歌山以西"),
