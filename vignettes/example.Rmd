@@ -70,6 +70,19 @@ devtools::load_all()
 
 ### 漁況の経過（2019年7月～11月）および見通し（2020年1月～6月）についての説明
 
+
+```{r, echo = FALSE, warning = FALSE, message = FALSE}
+spcs  <- "maaji"
+maaji <- xl2df(fname = "../tests/testthat/excel/gyokaikyo_dummy_maaji.xlsx",
+               year = params$year,
+               type = "catch",
+               spcs = spcs) %>%
+  dplyr::filter(dplyr::if_else(Prefec == "静岡",
+                               Fishery == "全漁業", # 静岡県のみ全漁業を使用
+                               Fishery != "全漁業")) # 他県は全漁業以外の合計値
+```
+
+
 #### 1．資源状態
 資源量は`r editme("1986年以降増加し、1990年代半ばは15万トン～16万トンと高い水準で推移したが、1997年以降減少した")`。`r editme("2009年～2013年は横ばいで推移したが、その後再び減少している")`。加入量は`r editme("1993年をピークに減少し、2009年以降3.2億尾～7.1億尾と低い水準で推移している")`。`r year()`年度の資源評価において、`r year(- 1)`年の資源量は`r editme("4.3万")`トン、親魚量が`r editme("2.3万")`トンと推定され、
 資源水準は`r editme("低位")` 、動向は`r editme("減少")`と判断された。
@@ -101,20 +114,6 @@ devtools::load_all()
 ```{r, echo = FALSE}
 ```
 房総～鹿島灘海域における北部まき網の`r year()`年7月～11月の漁獲量は`r editme("1,372")`トンとなり、前年同期`r editme("47")`トンを大きく上回った。仙台湾～三陸海域では、宮城県の`r year()`年7月～11月の漁獲量は`r sum_jul_nov(maaji, "宮城")`トン、岩手県の2019年7月～11月の定置網による漁獲量は`r sum_jul_nov(maaji, "岩手", "定置網")`164`r editme("あってる？")`トンで、それぞれ前年を上回った。青森県では2019年7月～11月に八戸の漁獲量は`r editme(0.2)`トン、平舘の定置網による漁獲量は`r editme(88)`トンであった。
-
-
-
-```{r, echo = FALSE, warning = FALSE, message = FALSE}
-spcs  <- "maaji"
-maaji <- xl2df(fname = "../tests/testthat/excel/gyokaikyo_dummy_maaji.xlsx",
-               year = params$year,
-               type = "catch",
-               spcs = spcs) %>%
-  dplyr::filter(dplyr::if_else(Prefec == "静岡", 
-                               Fishery == "全漁業", # 静岡県のみ全漁業を使用
-                               Fishery != "全漁業")) %>%# 他県は全漁業以外の合計値
-  dplyr::filter(Prefec != "北海道") # 資源評価では北海道を使用しない
-```
 
 ### 表
 ```{r, echo = FALSE, warning = FALSE}
