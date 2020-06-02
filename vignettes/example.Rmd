@@ -96,11 +96,11 @@ maaji <- xl2df(fname = "../tests/testthat/excel/gyokaikyo_dummy_maaji.xlsx",
 ```
 
 ### 表
-```{r, echo = FALSE}
+```{r, echo = FALSE, warning = FALSE}
 #df2table(maaji, year = 2016)
-df2table(maaji, year = 2017)
-df2table(maaji, year = 2018, header = FALSE)
-df2table(maaji, year = 2019, header = FALSE)
+df2table(maaji, year = 2017, Japanese = TRUE)
+df2table(maaji, year = 2018, header = FALSE, Japanese = TRUE)
+df2table(maaji, year = 2019, header = FALSE, Japanese = TRUE)
 ```
 ### 近年の太平洋岸のマアジの主要港水揚量
 
