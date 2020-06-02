@@ -1,18 +1,27 @@
 ---
-title: "test_vignette"
+title: "`r params$year + 1` 年?月漁海況予報会議資料"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{test_vignette}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
+params:
+  year: 2019
+  draft: TRUE
 ---
 
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>",
-  cache = TRUE
-)
+  comment = "#>"
+  )
+year <- function(plus = 0, minus = 0, highlight = TRUE) {
+  yr <- params$year + plus - minus
+  if (highlight) return(manucheckr::highlight(yr))
+  force(yr)
+}
+
+handwritten <- function(x) manucheckr::checkme(x)
 ```
 
 ```{r setup}
@@ -22,6 +31,7 @@ library(cowplot)
 library(scales)
 library(patchwork)
 library(kableExtra)
+library(manucheckr)
 devtools::load_all()
 ```
 
@@ -29,22 +39,22 @@ devtools::load_all()
 
 ----
 
-## 今後の見通し （2020年1月～6月）
+## 今後の見通し （`r year(plus = 1)` 年`r handwritten(1)`月～`r handwritten(6)`月）
 対象海域：北薩～熊野灘、相模湾 <br>
 対象漁業：まき網、定置網 <br>
-対象魚群：0歳魚（2020年級群）、1歳魚（2019年級群）、2歳魚（2018年級群）、3歳（2017年級群）以上。年初に加齢、魚体は尾叉長。
+対象魚群：0歳魚（`r year(plus = 1)`年級群）、1歳魚（`r year()`年級群）、2歳魚（`r year(minus = 1)`年級群）、3歳（`r year(minus = 2)`年級群）以上。年初に加齢、魚体は尾叉長。
 
 1. 北薩～土佐湾（まき網、定置網）
-    1. 来遊量：北薩～薩南海域、宿毛湾・土佐湾では極めて低調であった前年を上回る。日向灘では前年を下回る。豊後水道では前年並。
-    1. 魚　体：北薩～薩南海域では1歳魚、2歳魚主体、日向灘、豊後水道では1歳魚主体、宿毛湾・土佐湾では0歳魚、1歳魚主体。0歳魚は14 cm以下、1歳魚は14 cm～20 cm、2歳以上は20 cm以上。
+    1. 来遊量：北薩～薩南海域、宿毛湾・土佐湾では`r handwritten("極めて低調であった前年を上回る")`。日向灘では前年`r handwritten("を下回る")`。豊後水道では前年`r handwritten("並")`。
+    1. 魚　体：北薩～薩南海域では`r (handwritten("1歳魚、2歳魚主体"))`、日向灘、豊後水道では`r handwritten("1歳魚主体")`、宿毛湾・土佐湾では`r handwritten("0歳魚、1歳魚主体")`。0歳魚は14 cm以下、1歳魚は14 cm～20 cm、2歳以上は20 cm以上。
 
 1. 紀伊水道外域～熊野灘（まき網、定置網）
-    1. 来遊量：紀伊水道外域西部では前年並。紀伊水道外域東部では極めて低調であった前年を上回る。熊野灘では前年を下回る。
-    1. 魚　体：紀伊水道外域東部では1歳魚～4歳魚主体、熊野灘では1歳魚主体。0歳魚は12 cm以下、1歳魚は14 cm～21 cm、2歳以上は21 cm以上。
+    1. 来遊量：紀伊水道外域西部では前年`r handwritten("並")`。紀伊水道外域東部では`r handwritten("極めて低調であった前年を上回る")`。熊野灘では`r handwritten("前年を下回る")`。
+    1. 魚　体：紀伊水道外域東部では`r handwritten("1歳魚～4歳魚主体")`、熊野灘では`r handwritten("1歳魚主体")`。0歳魚は12 cm以下、1歳魚は14 cm～21 cm、2歳以上は21 cm以上。
 
 1. 相模湾（定置網）
-    1. 来遊量：前年を上回る。
-    1. 魚　体：主体となる1歳魚は15 cm～20 cm。
+    1. 来遊量：前年を`r handwritten("上回る")`。
+    1. 魚　体：主体となる`r handwritten("1歳魚は15 cm～20 cm")`。
     
 ----
 
@@ -83,10 +93,9 @@ devtools::load_all()
 
 
 ```{r, echo = FALSE, warning = FALSE, message = FALSE}
-year  <- 2019
 spcs  <- "maaji"
 maaji <- xl2df(fname = "../tests/testthat/excel/gyokaikyo_dummy_maaji.xlsx",
-               year = year,
+               year = year(highlight = FALSE),
                type = "catch",
                spcs = spcs) %>%
   dplyr::filter(dplyr::if_else(Prefec == "静岡", 
@@ -97,10 +106,10 @@ maaji <- xl2df(fname = "../tests/testthat/excel/gyokaikyo_dummy_maaji.xlsx",
 
 ### 表
 ```{r, echo = FALSE, warning = FALSE}
-#df2table(maaji, year = 2016)
-df2table(maaji, year = 2017, Japanese = TRUE)
-df2table(maaji, year = 2018, header = FALSE, Japanese = TRUE)
-df2table(maaji, year = 2019, header = FALSE, Japanese = TRUE)
+#df2table(maaji, year = year(minus = 3, highlight = FALSE))
+df2table(maaji, year = year(minus = 2, highlight = FALSE), Japanese = TRUE)
+df2table(maaji, year = year(minus = 1, highlight = FALSE), header = FALSE, Japanese = TRUE)
+df2table(maaji, year = year(minus = 0, highlight = FALSE), header = FALSE, Japanese = TRUE)
 ```
 ### 近年の太平洋岸のマアジの主要港水揚量
 
@@ -178,7 +187,7 @@ bldata %>%
 
 ```{r catch_at_age, fig.width = 9, echo = FALSE, message = FALSE, warning = FALSE}
 caa_maaji <- xl2df(fname = "../tests/testthat/excel/catch_at_age_maaji.xlsx",
-                   year = year,
+                   year = year(highlight = FALSE),
                    type = "catch_at_age",
                    spcs = spcs)
 plot_grid(
