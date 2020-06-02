@@ -24,7 +24,7 @@ year <- function(plus = 0, minus = 0, highlight = TRUE) {
 handwritten <- function(x) manucheckr::checkme(x)
 ```
 
-```{r setup}
+```{r setup, echo = FALSE, message = FALSE}
 library(ggplot2)
 library(gridExtra)
 library(cowplot)
