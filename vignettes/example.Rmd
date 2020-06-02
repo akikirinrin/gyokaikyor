@@ -142,7 +142,7 @@ westpac + eastpac + patchwork::plot_layout(nrow = 2)
 
 ```
 
-### 図 近年の太平洋岸のマアジの主要港水揚量 上：和歌山以西，下：三重以東
+図 近年の太平洋岸のマアジの主要港水揚量 上：和歌山以西，下：三重以東
 
 ### 月別体長階級別漁獲尾数
 
@@ -177,7 +177,7 @@ ggplot(bldata %>%
 
 ### 年齢別漁獲尾数
 
-```{r catch_at_age, fig.width = 9, message = FALSE, warning = FALSE}
+```{r catch_at_age, fig.width = 9, echo = FALSE, message = FALSE, warning = FALSE}
 caa_maaji <- xl2df(fname = "../tests/testthat/excel/catch_at_age_maaji.xlsx",
                    year = year,
                    type = "catch_at_age",
@@ -194,6 +194,10 @@ plot_grid(
   rel_widths = c(1.5, 1)
 )
 ```
+
+図 年齢別漁獲尾数　左は1982～2018年の農林統計で引き延ばした年齢別漁獲尾数。<br>
+右は2006～2019年の主要港年齢別漁獲尾数
+
 
 ### 表 加入量指標値
 
