@@ -6,6 +6,7 @@
 #' @param year Year to extract in numeric
 #' @param format Select format output
 #' @param header TRUE to include header, FALSE to remove header
+#' @param Japanese TRUE to convert Year, Month, Sum to Japanese
 #' @inheritParams kableExtra::kable_styling
 #' @examples
 #' \dontrun{
@@ -15,16 +16,21 @@
 #' }
 #' @importFrom assertthat assert_that has_name
 #' @export
-df2table <- function(df, spcs = NULL, year, format = "html", header = TRUE) {
+df2table <- function(df, spcs = NULL, year, format = "html",
+                     header = TRUE, Japanese = FALSE) {
   assert_that(
     has_name(df, c("Year", "Species", "Prefec", "Month", "Catch_ton"))
   )
 
   if (is.null(spcs)) spcs <- unique(df$Species)
 
-  factorize_monthcol <- function(month_or_sum) {
-    factor(month_or_sum, levels = c(1:12, "Sum"))
-  }
+  factorize_monthcol <- function(month_or_sum, Japanese = FALSE) {
+    if (Japanese == TRUE) {
+      factor(month_or_sum, levels = c(1:12, "合計"))
+    }else{
+      factor(month_or_sum, levels = c(1:12, "Sum"))
+      }
+    }
 
   filtrate <- function() {
     df %>%
@@ -48,7 +54,10 @@ df2table <- function(df, spcs = NULL, year, format = "html", header = TRUE) {
       dplyr::select(-Year, -Month) %>%
       dplyr::summarize_all(sum, na.rm = TRUE) %>%
       dplyr::mutate(Year = year,
-                    Month = factorize_monthcol("Sum"))
+                    Month = dplyr::if_else(Japanese == TRUE,
+                                           factorize_monthcol("合計",
+                                                              Japanese == TRUE),
+                                           factorize_monthcol("Sum")))
   }
 
   make_sumcol <- function() {
@@ -61,19 +70,30 @@ df2table <- function(df, spcs = NULL, year, format = "html", header = TRUE) {
   }
 
   make_alltotal <- function() {
-    data.frame(Sum = sum(make_sumcol()))
+      data.frame(Sum = sum(make_sumcol()))
   }
 
   top <- dplyr::bind_cols(make_tbl_body(), make_sumcol())
-  btm <- dplyr::bind_cols(make_sumrow(), make_alltotal())
+  btm <- suppressWarnings(dplyr::bind_cols(make_sumrow(), make_alltotal()))
 
-  if(header ==FALSE){
-      dplyr::bind_rows(top, btm) %>%
+  if (Japanese == TRUE) {
+    suppressWarnings(
+  tabledata <-
+    dplyr::bind_rows(top, btm) %>%
+    dplyr::rename(年 = Year, 月 = Month, 合計 = Sum)
+    )
+  }else{
+  tabledata <-
+    dplyr::bind_rows(top, btm)
+  }
+
+  if (header == FALSE) {
+      tabledata %>%
         knitr::kable(booktabs = TRUE, format = format, col.names = NULL) %>%
         kableExtra::kable_styling(font_size = 7,
                                   bootstrap_options = "condensed")
   }else{
-    dplyr::bind_rows(top, btm) %>%
+    tabledata %>%
       knitr::kable(booktabs = TRUE, format = format) %>%
       kableExtra::kable_styling(font_size = 7,
                                 bootstrap_options = "condensed")
