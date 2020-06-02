@@ -22,7 +22,7 @@ year <- function(x = 0) {
 
 editme <- function(x) manucheckr::checkme(x)
 
-sum_jul_nov <- function(dat, prefec, fishery = unique(dat$Fishuery)) {
+sum_jul_nov <- function(dat, prefec, fishery = unique(dat$Fishery)) {
   dat %>%
     dplyr::filter(Year == params$year, dplyr::between(Month, 7, 11),
                   Prefec %in% prefec,
