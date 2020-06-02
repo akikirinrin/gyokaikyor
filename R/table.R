@@ -4,6 +4,8 @@
 #' \code{c("Year", "Species", "Prefec", "Month", "Catch_ton")}
 #' @param spcs Character of species name to extract
 #' @param year Year to extract in numeric
+#' @param format Select format output
+#' @param header TRUE to include header, FALSE to remove header
 #' @inheritParams kableExtra::kable_styling
 #' @examples
 #' \dontrun{
@@ -13,7 +15,7 @@
 #' }
 #' @importFrom assertthat assert_that has_name
 #' @export
-df2table <- function(df, spcs = NULL, year, format = "html") {
+df2table <- function(df, spcs = NULL, year, format = "html", header = TRUE) {
   assert_that(
     has_name(df, c("Year", "Species", "Prefec", "Month", "Catch_ton"))
   )
@@ -65,7 +67,15 @@ df2table <- function(df, spcs = NULL, year, format = "html") {
   top <- dplyr::bind_cols(make_tbl_body(), make_sumcol())
   btm <- dplyr::bind_cols(make_sumrow(), make_alltotal())
 
-  dplyr::bind_rows(top, btm) %>%
-    knitr::kable(booktabs = TRUE, format = format) %>%
-    kableExtra::kable_styling(font_size = 5)
+  if(header ==FALSE){
+      dplyr::bind_rows(top, btm) %>%
+        knitr::kable(booktabs = TRUE, format = format, col.names = NULL) %>%
+        kableExtra::kable_styling(font_size = 7,
+                                  bootstrap_options = "condensed")
+  }else{
+    dplyr::bind_rows(top, btm) %>%
+      knitr::kable(booktabs = TRUE, format = format) %>%
+      kableExtra::kable_styling(font_size = 7,
+                                bootstrap_options = "condensed")
+    }
 }
