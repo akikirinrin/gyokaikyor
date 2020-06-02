@@ -146,7 +146,7 @@ westpac + eastpac + patchwork::plot_layout(nrow = 2)
 
 ### 月別体長階級別漁獲尾数
 
-```{r, fig.width = 8, fig.height = 11}
+```{r, fig.width = 8, fig.height = 11, echo = FALSE}
 bldata <-
   parse_legacy_maaji_length_dist(
     fname = "../tests/testthat/excel/gyokaikyo_dummy_maaji_length_dist.xlsx"
