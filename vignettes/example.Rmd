@@ -116,7 +116,7 @@ catch_maaji <-
 westpac <- 
   ggplot(catch_maaji %>% dplyr::filter(Region == "和歌山以西"),
          aes(x = Date, y = Catch, group = Prefec, fill = Prefec)) +
-  geom_col() +
+  geom_col(size = 0.1, color = "black") +
   theme_bw(base_size = 10) +
   scale_x_date(limits = as.Date(c("2012-12-01", "2020-01-01")),
                date_breaks = "6 months") +
@@ -128,7 +128,7 @@ westpac <-
 eastpac <- 
   ggplot(catch_maaji %>% dplyr::filter(Region == "三重以東"),
          aes(x = Date, y = Catch, group = Prefec, fill = Prefec)) +
-  geom_col() +
+  geom_col(size = 0.1, color = "black") +
   theme_bw(base_size = 10) +
   scale_x_date(limits = as.Date(c("2012-12-01", "2020-01-01")),
                labels = date_format("%Y-%m"),
@@ -142,7 +142,7 @@ westpac + eastpac + patchwork::plot_layout(nrow = 2)
 
 ```
 
-### 図 近年の太平洋岸のマアジの主要港水揚量 上：和歌山以西，下：三重以東
+図 近年の太平洋岸のマアジの主要港水揚量 上：和歌山以西，下：三重以東
 
 ### 月別体長階級別漁獲尾数
 
@@ -177,16 +177,27 @@ ggplot(bldata %>%
 
 ### 年齢別漁獲尾数
 
-```{r catch_at_age, fig.width = 9, message = FALSE, warning = FALSE}
+```{r catch_at_age, fig.width = 9, echo = FALSE, message = FALSE, warning = FALSE}
 caa_maaji <- xl2df(fname = "../tests/testthat/excel/catch_at_age_maaji.xlsx",
                    year = year,
                    type = "catch_at_age",
                    spcs = spcs)
 plot_grid(
-  plot_catch_at_age(caa_maaji, type = "Nourin_adjusted"),
-  plot_catch_at_age(caa_maaji, type = "Major_ports")
+  plot_catch_at_age(caa_maaji, type = "Nourin_adjusted") +
+    theme_bw() +
+    theme(legend.position = c(0.85, 0.7)) +
+    labs(x = "", y = "年齢別漁獲尾数(百万尾)"),
+  plot_catch_at_age(caa_maaji, type = "Major_ports") +
+    theme_bw() +
+    theme(legend.position = c(0.8, 0.7)) +
+    labs(x = "", y = ""),
+  rel_widths = c(1.5, 1)
 )
 ```
+
+図 年齢別漁獲尾数　左は1982～2018年の農林統計で引き延ばした年齢別漁獲尾数。<br>
+右は2006～2019年の主要港年齢別漁獲尾数
+
 
 ### 表 加入量指標値
 
