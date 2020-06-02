@@ -21,6 +21,7 @@ library(gridExtra)
 library(cowplot)
 library(scales)
 library(patchwork)
+library(kableExtra)
 devtools::load_all()
 ```
 
@@ -187,31 +188,93 @@ plot_grid(
 )
 ```
 
-### 加入量指標
+### 表 加入量指標値
 
 ```{r, echo = FALSE, fig.height = 4.5, fig.width = 9, message = FALSE, warning = FALSE}
+
+indexdata <- parse_index("../tests/testthat/excel/index_maaji.xlsx", 2019, "geomean")
+
+foo <- indexdata %>% dplyr::filter(Year >= 2006) %>%
+  dplyr::mutate(LocPer = paste0(Place, "Z", Period)) %>%
+  dplyr::mutate(Geomean = round(Geomean, digits = 2)) %>%
+  dplyr::select(Year, LocPer, Geomean) %>%
+  tidyr::pivot_wider(names_from = LocPer, values_from = Geomean) %>%
+  dplyr::rename(年 = Year)
+
+season_names <-
+  colnames(foo) %>%
+  stringr::str_extract("年|(?<=Z).+")
+
+knitr::kable(foo, "html", booktabs = T,
+             col.names = season_names) %>%
+  kable_styling(font_size = 10) %>% 
+             add_header_above(c("",
+                              "宮崎南部\n定置網\nアジ仔CPUE",
+                              "愛媛県まき網\n\n宇和島港\nゼンゴCPUE"=2,
+                              "高知県まき\n\n宿毛湾ゼンゴ\n資源量指数"=2,
+                              "串本\n棒受網\n当歳魚\n漁獲量",
+                              "伊勢湾\n豆板漁業\n当歳魚\n漁獲量"=2,
+                              "千葉県定置網\n\n当歳魚\n漁獲量"=2,
+                              "伊豆東岸定置*\n\n当歳魚\n漁獲量"=2,
+                              "指標値の\n相乗平均\n\n(宮崎~千葉)"=2
+                              )) %>%
+  footnote(general = "* 資源評価には使っていない指標値。相乗平均の計算にも含んでいない。",
+           general_title = "")
   
 ybreaks <- seq_log(-3, 3)
 
 plot_rawdata <-
-  parse_index("../tests/testthat/excel/index_maaji.xlsx", 2019,
-            type = "rawdata") %>%
+  parse_index("../tests/testthat/excel/index_maaji.xlsx",
+              2019,
+              type = "rawdata") %>%
+  dplyr::filter(Place != "伊豆東岸定置網0歳魚漁獲量") %>%
+  dplyr::mutate(Place = 
+                  stringr::str_extract(Place,
+                                       "宮崎|宇和島|宿毛湾|串本|伊勢湾|千葉")) %>%
   ggplot(aes(Year, LogIndex, group = Place, color = Place)) +
   geom_line(size = 1.2) +
-  scale_y_log10(breaks = ybreaks,labels = ybreaks) +
+  scale_y_log10(breaks = ybreaks, labels = ybreaks) +
+  coord_cartesian(ylim = c(0.01, NA))+
+  scale_x_continuous(breaks = seq(2000, 2020, by = 2)) +
   theme_bw(base_size = 14) +
-  theme(legend.text = element_text(size = 10))
+  theme(
+   legend.text = element_text(size = 8),
+   legend.position = c(0.3, 0.12), legend.box = "horizontal",
+   legend.title = element_blank(),
+   legend.background = element_rect(fill="white",
+                                    size=0.2,
+                                    linetype="solid",
+                                    color = "black"),
+   axis.text.x = element_text(angle = 90, hjust = 1)) +
+  guides(color = guide_legend(nrow = 2)) +
+  labs(title = "加入量指標値 (2019年まで)", x = "", y = "加入量指標値 (対数値)")
 
 plot_geomean <-
-  parse_index("../tests/testthat/excel/index_maaji.xlsx", 2019,
-            type = "geomean") %>%
+  parse_index("../tests/testthat/excel/index_maaji.xlsx",
+              2019,
+              type = "geomean") %>%
   dplyr::filter(Period %in% c("4-翌3月", "4-翌2月"),
-                Place == "指標値の_(宮崎~千葉)") %>%
+                Place == "指標値の_(宮崎~千葉)",
+                Year >= 2006) %>%
+  dplyr::mutate(Period = factor(Period, levels = c("4-翌3月", "4-翌2月"))) %>%
   ggplot(aes(Year, Geomean, group = Period, color = Period)) +
   geom_line(size = 1.2) +
-  scale_y_log10(breaks=ybreaks,labels = ybreaks) +
+  coord_cartesian(ylim = c(0, 9)) +
   theme_bw(base_size = 14) +
-  theme(legend.text = element_text(size = 10))
+  theme(
+    legend.text = element_text(size = 10),
+    legend.position = c(0.8, 0.8),
+    legend.title = element_blank(),
+    legend.background = element_rect(fill="white",
+                                     size=0.2,
+                                     linetype="solid",
+                                     color = "black"),
+    axis.text.x = element_text(angle = 90, hjust = 1)) +
+  labs(title = "指標値の相乗平均", x = "", y = "相乗平均")
+
 
 plot_grid(plot_rawdata, plot_geomean)
 ```
+
+図　左：各加入量指標値の推移（宮崎、串本以外の2019年指標値は翌2月までの暫定値) <br>
+　　右：4月～翌3月集計値の相乗平均と4月～翌2月の相乗平均との比較
