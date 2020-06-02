@@ -38,7 +38,9 @@ Suggests:
     lintr,
     cowplot,
     scales,
-    patchwork
+    patchwork,
+    manucheckr (>= 0.1.0)
 VignetteBuilder: knitr
-Remotes: 
-    akikirinrin/lucifer
+Remotes:
+    akikirinrin/lucifer,
+    akikirinrin/manucheckr
