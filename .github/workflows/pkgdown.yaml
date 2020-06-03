@@ -8,7 +8,7 @@ jobs:
   pkgdown:
     runs-on: macOS-latest
     env:
-      GITHUB_PAT: ${{ PAT_for_ghpages }}
+      GITHUB_PAT: ${{ secrets.PAT_for_ghpages }}
     steps:
       - uses: actions/checkout@v2
 
