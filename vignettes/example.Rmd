@@ -251,7 +251,7 @@ knitr::kable(foo, "html", booktabs = T,
            general_title = "")
   
 ybreaks <- seq_log(-3, 3)
-
+title   <- paste0("加入量指標値 (", params$year, "年まで)")
 plot_rawdata <-
   parse_index("../tests/testthat/excel/index_maaji.xlsx",
               params$year,
@@ -276,7 +276,7 @@ plot_rawdata <-
                                     color = "black"),
    axis.text.x = element_text(angle = 90, hjust = 1)) +
   guides(color = guide_legend(nrow = 2)) +
-  labs(title = "加入量指標値 (`r year()`年まで)", x = "", y = "加入量指標値 (対数値)")
+  labs(title = title, x = "", y = "加入量指標値 (対数値)")
 
 plot_geomean <-
   parse_index("../tests/testthat/excel/index_maaji.xlsx",
