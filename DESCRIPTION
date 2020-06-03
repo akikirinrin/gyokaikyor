@@ -1,6 +1,6 @@
 Package: gyokaikyor
 Title: What the Package Does (One Line, Title Case)
-Version: 0.5.0
+Version: 1.0.0
 Authors@R: 
     person(given = "First",
            family = "Last",
@@ -36,7 +36,11 @@ Suggests:
     usethis,
     covr,
     lintr,
-    cowplot
+    cowplot,
+    scales,
+    patchwork,
+    manucheckr (>= 0.1.0)
 VignetteBuilder: knitr
-Remotes: 
-    akikirinrin/lucifer
+Remotes:
+    akikirinrin/lucifer,
+    akikirinrin/manucheckr

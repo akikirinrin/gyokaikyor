@@ -15,5 +15,5 @@ plot_catch_at_age <- function(df, type) {
   df %>%
     dplyr::filter(Name == type) %>%
     ggplot(aes(Year, N_million_fishes, fill = Age)) +
-    geom_bar(stat = "identity")
+    geom_bar(stat = "identity", color = "black", size = 0.3)
 }

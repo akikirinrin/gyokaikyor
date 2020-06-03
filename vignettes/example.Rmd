@@ -1,24 +1,46 @@
 ---
-title: "test_vignette"
+title: "`r params$year + 1` 年?月漁海況予報会議資料"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{test_vignette}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
+params:
+  year: 2019
+  draft: FALSE
 ---
 
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>",
-  cache = TRUE
-)
+  comment = "#>"
+  )
+year <- function(x = 0) {
+  yr <- params$year + x
+  manucheckr::highlight(yr)
+}
+
+editme <- function(x) manucheckr::checkme(x)
+
+sum_jul_nov <- function(dat, prefec, fishery = unique(dat$Fishery)) {
+  dat %>%
+    dplyr::filter(Year == params$year, dplyr::between(Month, 7, 11),
+                  Prefec %in% prefec,
+                  Fishery %in% fishery) %>%
+    dplyr::pull(Catch_ton) %>% sum(na.rm = TRUE) %>%
+    round(0) %>%
+    manucheckr::highlight()
+}
 ```
 
-```{r setup}
+```{r setup, echo = FALSE, message = FALSE}
 library(ggplot2)
 library(gridExtra)
 library(cowplot)
+library(scales)
+library(patchwork)
+library(kableExtra)
+library(manucheckr)
 devtools::load_all()
 ```
 
@@ -26,154 +48,262 @@ devtools::load_all()
 
 ----
 
-## 今後の見通し （2020年1月～6月）
+## 今後の見通し （`r year( 1)` 年`r editme(1)`月～`r editme(6)`月）
 対象海域：北薩～熊野灘、相模湾 <br>
 対象漁業：まき網、定置網 <br>
-対象魚群：0歳魚（2020年級群）、1歳魚（2019年級群）、2歳魚（2018年級群）、3歳（2017年級群）以上。年初に加齢、魚体は尾叉長。
+対象魚群：0歳魚（`r year( 1)`年級群）、1歳魚（`r year()`年級群）、2歳魚（`r year(- 1)`年級群）、3歳（`r year(- 2)`年級群）以上。年初に加齢、魚体は尾叉長。
 
 1. 北薩～土佐湾（まき網、定置網）
-    1. 来遊量：北薩～薩南海域、宿毛湾・土佐湾では極めて低調であった前年を上回る。日向灘では前年を下回る。豊後水道では前年並。
-    1. 魚　体：北薩～薩南海域では1歳魚、2歳魚主体、日向灘、豊後水道では1歳魚主体、宿毛湾・土佐湾では0歳魚、1歳魚主体。0歳魚は14 cm以下、1歳魚は14 cm～20 cm、2歳以上は20 cm以上。
+    1. 来遊量：北薩～薩南海域、宿毛湾・土佐湾では`r editme("極めて低調であった前年を上回る")`。日向灘では前年`r editme("を下回る")`。豊後水道では前年`r editme("並")`。
+    1. 魚　体：北薩～薩南海域では`r (editme("1歳魚、2歳魚主体"))`、日向灘、豊後水道では`r editme("1歳魚主体")`、宿毛湾・土佐湾では`r editme("0歳魚、1歳魚主体")`。0歳魚は14 cm以下、1歳魚は14 cm～20 cm、2歳以上は20 cm以上。
 
 1. 紀伊水道外域～熊野灘（まき網、定置網）
-    1. 来遊量：紀伊水道外域西部では前年並。紀伊水道外域東部では極めて低調であった前年を上回る。熊野灘では前年を下回る。
-    1. 魚　体：紀伊水道外域東部では1歳魚～4歳魚主体、熊野灘では1歳魚主体。0歳魚は12 cm以下、1歳魚は14 cm～21 cm、2歳以上は21 cm以上。
+    1. 来遊量：紀伊水道外域西部では前年`r editme("並")`。紀伊水道外域東部では`r editme("極めて低調であった前年を上回る")`。熊野灘では`r editme("前年を下回る")`。
+    1. 魚　体：紀伊水道外域東部では`r editme("1歳魚～4歳魚主体")`、熊野灘では`r editme("1歳魚主体")`。0歳魚は12 cm以下、1歳魚は14 cm～21 cm、2歳以上は21 cm以上。
 
 1. 相模湾（定置網）
-    1. 来遊量：前年を上回る。
-    1. 魚　体：主体となる1歳魚は15 cm～20 cm。
+    1. 来遊量：前年を`r editme("上回る")`。
+    1. 魚　体：主体となる`r editme("1歳魚は15 cm～20 cm")`。
     
 ----
 
 
-### 漁況の経過（2019年7月～11月）および見通し（2020年1月～6月）についての説明
+### 漁況の経過（`r year()`年7月～11月）および見通し（`r year(1)`年1月～6月）についての説明
+
+
+```{r, echo = FALSE, warning = FALSE, message = FALSE}
+spcs  <- "maaji"
+maaji <- xl2df(fname = "../tests/testthat/excel/gyokaikyo_dummy_maaji.xlsx",
+               year = params$year,
+               type = "catch",
+               spcs = spcs) %>%
+  dplyr::filter(dplyr::if_else(Prefec == "静岡",
+                               Fishery == "全漁業", # 静岡県のみ全漁業を使用
+                               Fishery != "全漁業")) # 他県は全漁業以外の合計値
+```
+
 
 #### 1．資源状態
-資源量は1986年以降増加し、1990年代半ばは15万トン～16万トンと高い水準で推移したが、1997年以降減少した。2009年～2013年は横ばいで推移したが、その後再び減少している。加入量は1993年をピークに減少し、2009年以降3.2億尾～7.1億尾と低い水準で推移している。2019年度の資源評価において、2018年の資源量は4.3万トン、親魚量が2.3万トンと推定され、資源水準は低位、動向は減少と判断された。
-2017年級群（3歳魚）の加入量は4.2億尾と推定され、2019年後半の漁獲は低調に推移しており、残存資源量は少ない。
-2018年級群（2歳魚）の加入量は3.6億尾と推定された。低水準ながら2019年前半の漁獲の主体となったが、2019年後半の漁獲は低調に推移しており、残存資源量は少ないと考えられる。
-2019年級群（1歳魚）は、いずれの海域でも漁獲対象になる。加入量の指標となる各県地先の漁況は、宮崎県南部定置網アジ仔CPUE（4月～6月）、宿毛湾まき網ゼンゴ資源量指数（4月～11月）、伊勢湾小型底びき網（まめ板）当歳魚漁獲量（4月～11月）は前年を下回り、宇和島港まき網ゼンゴCPUE（4月～11月）および串本棒受網当歳魚漁獲量（5月～6月）は前年を上回った。4月～11月の指標値の相乗平均は2018年級群を下回ることから、2019年級群の加入量は2018年級群を下回ると考えられる。
-2020年級群（0歳魚）は期後半から漁獲されると考えられるが、現時点での予測は困難である。
+資源量は`r editme("1986年以降増加し、1990年代半ばは15万トン～16万トンと高い水準で推移したが、1997年以降減少した")`。`r editme("2009年～2013年は横ばいで推移したが、その後再び減少している")`。加入量は`r editme("1993年をピークに減少し、2009年以降3.2億尾～7.1億尾と低い水準で推移している")`。`r year()`年度の資源評価において、`r year(- 1)`年の資源量は`r editme("4.3万")`トン、親魚量が`r editme("2.3万")`トンと推定され、
+資源水準は`r editme("低位")` 、動向は`r editme("減少")`と判断された。
+`r year(- 2)`年級群（3歳魚）の加入量は`r editme("4.2億")`尾と推定され、2019年後半の漁獲は`r editme("低調に推移しており、残存資源量は少ない")`。
+`r year(- 1)`年級群（2歳魚）の加入量は`r editme("3.6億尾と推定された")`。`r editme("低水準ながら2019年前半の漁獲の主体となったが、2019年後半の漁獲は低調に推移しており、残存資源量は少ないと考えられる")`。
+`r year()`年級群（1歳魚）は、いずれの海域でも漁獲対象になる。加入量の指標となる各県地先の漁況は、`r editme("宮崎県南部定置網アジ仔CPUE（4月～6月）、宿毛湾まき網ゼンゴ資源量指数（4月～11月）、伊勢湾小型底びき網（まめ板）当歳魚漁獲量（4月～11月）は前年を下回り、宇和島港まき網ゼンゴCPUE（4月～11月）および串本棒受網当歳魚漁獲量（5月～6月）は前年を上回った。4月～11月の指標値の相乗平均は2018年級群を下回ることから、2019年級群の加入量は2018年級群を下回ると考えられる")`。
+`r year( 1)`年級群（0歳魚）は期後半から漁獲されると考えられるが、現時点での予測は困難である。
 
 #### 2．来遊量、漁期・漁場
 本魚種は予測期間を通じて漁獲対象となる。来遊量については、海域ごとに、前期の漁況に基づき予測した。年齢別体長は、これまでの体長組成の推移から概ね次のとおりである。0歳魚：14 cm以下、1歳魚：15 cm～20 cm、2歳魚：21 cm～24 cm、3歳以上：25 cm以上。3歳以上の年齢に対応した体長区分は現状では困難である。
 
 ##### （1）北薩～土佐湾
-北薩～薩南海域では、1歳魚、2歳魚（2019年級群、2018年級群）が漁獲の主体となる。1月～6月の漁獲量は、前年7月～12月の漁獲量と正の関係が認められる。2019年7月～12月は前年を下回っているが、2019年1月～6月は予測を大幅に下回ったことから、今期の来遊量は前年を上回ると予測される。
-日向灘では、1歳魚（2019年級群）が漁獲の主体となる。日向灘のまき網は、日向灘前年7月～12月漁獲量、愛媛県（宇和海南部）前年8月～11月まき網漁獲量および高知県（宿毛湾）前年7月～11月まき網漁獲量の相乗平均値により漁獲動向を判断している。これらの指標値が前年を下回ることから、今期の来遊量は前年を下回ると予測される。
-豊後水道南部西側では、1歳魚（2019年級群）が漁獲の主体となる。0歳魚が漁獲の主体であった2019年7月～11月の漁獲量は2018年同期を上回ったが、近年の資源水準と低い加入量および前年が直近年の中でも比較的好漁であったことを考慮し、今期の来遊量は前年並と予測される。
-豊後水道南部東側では、1歳魚（2019年級群）が漁獲の主体で、0歳魚（2020年級群）も混じる。1歳魚以上の当海域における2019年の漁獲量がほぼ前年並であったことから、今期の来遊量は前年並と予測される。
-宿毛湾・土佐湾では、0歳魚（2020年級群）と1歳魚（2019年級群）が主体となる。宿毛湾まき網の前年下半期漁獲量と上半期漁獲量には正の関係が認められる。2019年7月～12月は前年を下回っているが、2019年1月～6月は予測を大幅に下回ったことから、今期の来遊量は前年を上回ると予測される。
+北薩～薩南海域では、1歳魚、2歳魚（`r year()`年級群、`r year(-1)`年級群）が漁獲の主体となる。1月～6月の漁獲量は、前年7月～12月の漁獲量と正の関係が認められる。`r year()`年7月～12月は前年を下回っているが、`r year()`年1月～6月は予測を大幅に下回ったことから、今期の来遊量は前年を上回ると予測される。
+日向灘では、1歳魚（`r year()`年級群）が漁獲の主体となる。日向灘のまき網は、日向灘前年7月～12月漁獲量、愛媛県（宇和海南部）前年8月～11月まき網漁獲量および高知県（宿毛湾）前年7月～11月まき網漁獲量の相乗平均値により漁獲動向を判断している。これらの指標値が前年を下回ることから、今期の来遊量は前年を下回ると予測される。
+豊後水道南部西側では、1歳魚（`r year()`年級群）が漁獲の主体となる。0歳魚が漁獲の主体であった2019年7月～11月の漁獲量は2018年同期を上回ったが、近年の資源水準と低い加入量および前年が直近年の中でも比較的好漁であったことを考慮し、今期の来遊量は前年並と予測される。
+豊後水道南部東側では、1歳魚（`r year()`年級群）が漁獲の主体で、0歳魚（`r year(1)`年級群）も混じる。1歳魚以上の当海域における2019年の漁獲量がほぼ前年並であったことから、今期の来遊量は前年並と予測される。
+宿毛湾・土佐湾では、0歳魚（`r year(1)`年級群）と1歳魚（`r year()`年級群）が主体となる。宿毛湾まき網の前年下半期漁獲量と上半期漁獲量には正の関係が認められる。2019年7月～12月は前年を下回っているが、2019年1月～6月は予測を大幅に下回ったことから、今期の来遊量は前年を上回ると予測される。
 
 ##### （2）紀伊水道外域～熊野灘
-紀伊水道外域西部では、2019年7月～11月は0歳魚が漁獲の主体となり、漁獲量は前年同期並であった。近年の漁獲動向から、今期の来遊量は前年並と予測される。
-紀伊水道外域東部では、1歳魚～4歳魚（2019年級群～2016年級群）が漁獲の主体となる。2019年1月～6月のまき網全体での漁獲量は1989年以降で二番目に少なかった。漁場の海況(紀伊半島を北進する黒潮由来の暖水波及状況)に大きな変化がみられない可能性があるが、今期の来遊量は歴史的不漁であった前年を上回ると予測される。
-熊野灘では、まき網、定置網の7月～11月の漁況から、主体となる1歳魚（2019年級群）は前年を下回ると考えられる。期後半に定置網で漁獲される0歳魚（2020年級群）については海況の経過が前年に類似すると予測されることから前年並と予測される。2歳以上は少ない。以上から、今期の来遊量は前年を下回ると予測される。
+紀伊水道外域西部では、`r year()`年7月～11月は0歳魚が漁獲の主体となり、漁獲量は前年同期並であった。近年の漁獲動向から、今期の来遊量は前年並と予測される。
+紀伊水道外域東部では、1歳魚～4歳魚（`r year()`年級群～2016年級群）が漁獲の主体となる。2019年1月～6月のまき網全体での漁獲量は1989年以降で二番目に少なかった。漁場の海況(紀伊半島を北進する黒潮由来の暖水波及状況)に大きな変化がみられない可能性があるが、今期の来遊量は歴史的不漁であった前年を上回ると予測される。
+熊野灘では、まき網、定置網の7月～11月の漁況から、主体となる1歳魚（`r year()`年級群）は前年を下回ると考えられる。期後半に定置網で漁獲される0歳魚（`r year(1)`年級群）については海況の経過が前年に類似すると予測されることから前年並と予測される。2歳以上は少ない。以上から、今期の来遊量は前年を下回ると予測される。
 
 ##### （3）相模湾
-伊豆東岸では、1歳魚（2019年級群）が漁獲の主体となる。4月～11月の0歳魚の漁獲尾数と翌年1月～6月の1歳魚以上の漁獲尾数には正の関係が認められ、これらの関係から今期の来遊量は前年を上回ると予測される。
-西湘地区では、1歳魚（2019年級群）が漁獲の主体となる。2019年7月～11月の相模湾でのジンダ漁獲量は近年では高い水準であったことから、今期の来遊量は前年を上回ると予測される。
+伊豆東岸では、1歳魚（`r year()`年級群）が漁獲の主体となる。4月～11月の0歳魚の漁獲尾数と翌年1月～6月の1歳魚以上の漁獲尾数には正の関係が認められ、これらの関係から今期の来遊量は前年を上回ると予測される。
+西湘地区では、1歳魚（`r year()`年級群）が漁獲の主体となる。2019年7月～11月の相模湾でのジンダ漁獲量は近年では高い水準であったことから、今期の来遊量は前年を上回ると予測される。
 
 ##### （4）房総～三陸海域の漁獲情報
-房総～鹿島灘海域における北部まき網の2019年7月～11月の漁獲量は1,372トンとなり、前年同期47トンを大きく上回った。仙台湾～三陸海域では、宮城県の2019年7月～11月の漁獲量は823トン、岩手県の2019年7月～11月の定置網による漁獲量は164トンで、それぞれ前年を上回った。青森県では2019年7月～11月に八戸の漁獲量は0.2トン、平舘の定置網による漁獲量は88トンであった。
-
-
-
-```{r}
-year <- 2019
-spcs <- "maaji"
-maaji <- xl2df(fname = "../tests/testthat/excel/gyokaikyo_dummy_maaji.xlsx",
-               year = year,
-               type = "catch",
-               spcs = spcs)
+```{r, echo = FALSE}
 ```
+房総～鹿島灘海域における北部まき網の`r year()`年7月～11月の漁獲量は`r editme("1,372")`トンとなり、前年同期`r editme("47")`トンを大きく上回った。仙台湾～三陸海域では、宮城県の`r year()`年7月～11月の漁獲量は`r sum_jul_nov(maaji, "宮城")`トン、岩手県の2019年7月～11月の定置網による漁獲量は`r sum_jul_nov(maaji, "岩手", "定置網")`トンで、それぞれ前年を上回った。青森県では2019年7月～11月に八戸の漁獲量は`r editme(0.2)`トン、平舘の定置網による漁獲量は`r editme(88)`トンであった。
 
 ### 表
-```{r}
-df2table(maaji, year = 2016)
-df2table(maaji, year = 2017)
-df2table(maaji, year = 2018)
-df2table(maaji, year = 2019)
+```{r, echo = FALSE, warning = FALSE}
+df2table(maaji, year = params$year - 2, Japanese = TRUE)
+df2table(maaji, year = params$year - 1, header = FALSE, Japanese = TRUE)
+df2table(maaji, year = params$year - 0, header = FALSE, Japanese = TRUE)
 ```
 ### 近年の太平洋岸のマアジの主要港水揚量
 
-```{r, fig.width = 8, fig.height = 6}
-regional_graph(maaji,
-               species_regex = "maaji",
-               boundary_prefec = "\u548c\u6b4c\u5c71", # wakayama
-               unit = "ton")
+```{r, fig.width = 8, fig.height = 6, echo = FALSE, warning = FALSE, message = FALSE}
+catch_maaji <-
+  maaji %>%
+  dplyr::mutate(Region = set_region_by_two(Prefec, "和歌山")) %>%
+  dplyr::group_by(Year, Month, Region, Prefec) %>%
+  dplyr::summarize(Catch = sum(Catch_ton/1000, na.rm = TRUE),
+                   Fishery = "全漁業") %>%
+  dplyr::mutate(Date = as.Date(paste(Year, Month, "01", sep = "-"))) 
+
+westpac <- 
+  ggplot(catch_maaji %>% dplyr::filter(Region == "和歌山以西"),
+         aes(x = Date, y = Catch, group = Prefec, fill = Prefec)) +
+  geom_col(size = 0.1, color = "black") +
+  theme_bw(base_size = 10) +
+  scale_x_date(limits = as.Date(c("2012-12-01", "2020-01-01")),
+               date_breaks = "6 months") +
+  coord_cartesian(ylim = c(0, NA)) +     # 実際の漁獲量を扱う場合は ylim = c(0, 4)
+  theme(legend.title = element_blank(),
+        axis.text.x = element_blank()) + # 上の図はx-axis legendがない
+  labs(x = "", y = "漁獲量 (千トン)")
+
+eastpac <- 
+  ggplot(catch_maaji %>% dplyr::filter(Region == "三重以東"),
+         aes(x = Date, y = Catch, group = Prefec, fill = Prefec)) +
+  geom_col(size = 0.1, color = "black") +
+  theme_bw(base_size = 10) +
+  scale_x_date(limits = as.Date(c("2012-12-01", "2020-01-01")),
+               labels = date_format("%Y-%m"),
+               date_breaks = "6 months") +
+  coord_cartesian(ylim = c(0, NA)) +     # 実際の漁獲量を扱う場合は ylim = c(0, 4)
+  theme(legend.title=element_blank(),
+        axis.text.x = element_text(angle = 90, hjust = 1))  +
+  labs(x = "", y = "漁獲量 (千トン)")
+
+westpac + eastpac + patchwork::plot_layout(nrow = 2)
 
 ```
 
+図 近年の太平洋岸のマアジの主要港水揚量 上：和歌山以西，下：三重以東
+
 ### 月別体長階級別漁獲尾数
 
-```{r, fig.width = 8, fig.height = 16}
+```{r, fig.width = 8, fig.height = 11, echo = FALSE}
 bldata <-
   parse_legacy_maaji_length_dist(
     fname = "../tests/testthat/excel/gyokaikyo_dummy_maaji_length_dist.xlsx"
   ) %>%
   tidyr::drop_na(Frequency) %>%
-  dplyr::mutate(Region = dplyr::recode(Region,
-                                       "鹿児島" = "Kagoshima",
-                                       "宮～高" = "Miyazaki-Kochi",
-                                       "徳～和" = "Tokushima-Wakayama",
-                                       "三～愛" = "Mie-Aichi",
-                                       "静～神" = "Shizuoka-Kanagawa",
-                                       "千葉以北" = "Northern Chiba"
-  )) %>%
-  dplyr::mutate(Frequency = Frequency/1E5)
+  dplyr::mutate(Frequency = Frequency/1E6,
+                Region = factor(Region,
+                                levels = c("千葉以北", "静～神", "三～愛",
+                                           "宮～高", "徳～和", "鹿児島")))
 
-
-ggplot(bldata %>%
-         dplyr::filter(Year %in% c(2019, 2020)),
-       aes(x = Length, y = Frequency)) +
-         geom_col(aes(fill = Region)) +
-  facet_grid(Month~Year) +
-  theme_light() +
-  xlab("Length class (cm)") +
-  ylab("Frequency (million individuals)")
-       
-
+bldata %>%
+  dplyr::filter(Year %in% c(2019, 2020)) %>%
+  ggplot(aes(x = Length, y = Frequency)) +
+  geom_col(aes(fill = Region), width = 1, size = 0.1, color = "black") +
+  facet_grid(Month~Year, scale = "free_y") +
+  labs(x = "尾叉長 (cm)", y = "尾数 (百万尾)", fill = NULL) +
+  coord_cartesian(xlim = c(5, 40) + c(-0.5, 0.5)) +
+  scale_x_continuous(breaks = seq(5, 40, by = 5),
+                     expand = expansion(add = c(0, 0))) +
+  scale_y_continuous(labels = function(x) sprintf("%0.1f", x),
+                     expand = expansion(mult = c(0, 0.05))) +
+  theme_bw(base_line_size = 0.2) +
+  theme(aspect.ratio = 1/4,
+        panel.spacing.y = unit(0.01, units = "npc"),
+        panel.grid.minor = element_blank())
 ```
 
 ### 年齢別漁獲尾数
 
-```{r catch_at_age, fig.width = 9, message = FALSE, warning = FALSE}
+```{r catch_at_age, fig.width = 9, echo = FALSE, message = FALSE, warning = FALSE}
 caa_maaji <- xl2df(fname = "../tests/testthat/excel/catch_at_age_maaji.xlsx",
-                   year = year,
+                   year = params$year,
                    type = "catch_at_age",
                    spcs = spcs)
 plot_grid(
-  plot_catch_at_age(caa_maaji, type = "Nourin_adjusted"),
-  plot_catch_at_age(caa_maaji, type = "Major_ports")
+  plot_catch_at_age(caa_maaji, type = "Nourin_adjusted") +
+    theme_bw() +
+    theme(legend.position = c(0.85, 0.7)) +
+    labs(x = "", y = "年齢別漁獲尾数(百万尾)"),
+  plot_catch_at_age(caa_maaji, type = "Major_ports") +
+    theme_bw() +
+    theme(legend.position = c(0.8, 0.7)) +
+    labs(x = "", y = ""),
+  rel_widths = c(1.5, 1)
 )
 ```
 
-### 加入量指標
+図 年齢別漁獲尾数　左は1982～2018年の農林統計で引き延ばした年齢別漁獲尾数。<br>
+右は2006～2019年の主要港年齢別漁獲尾数
+
+
+### 表 加入量指標値
 
 ```{r, echo = FALSE, fig.height = 4.5, fig.width = 9, message = FALSE, warning = FALSE}
+
+indexdata <- parse_index("../tests/testthat/excel/index_maaji.xlsx", params$year, "geomean")
+
+foo <- indexdata %>% dplyr::filter(Year >= 2006) %>%
+  dplyr::mutate(LocPer = paste0(Place, "Z", Period)) %>%
+  dplyr::mutate(Geomean = round(Geomean, digits = 2)) %>%
+  dplyr::select(Year, LocPer, Geomean) %>%
+  tidyr::pivot_wider(names_from = LocPer, values_from = Geomean) %>%
+  dplyr::rename(年 = Year)
+
+season_names <-
+  colnames(foo) %>%
+  stringr::str_extract("年|(?<=Z).+")
+
+knitr::kable(foo, "html", booktabs = T,
+             col.names = season_names) %>%
+  kable_styling(font_size = 10) %>% 
+             add_header_above(c("",
+                              "宮崎南部\n定置網\nアジ仔CPUE",
+                              "愛媛県まき網\n\n宇和島港\nゼンゴCPUE"=2,
+                              "高知県まき\n\n宿毛湾ゼンゴ\n資源量指数"=2,
+                              "串本\n棒受網\n当歳魚\n漁獲量",
+                              "伊勢湾\n豆板漁業\n当歳魚\n漁獲量"=2,
+                              "千葉県定置網\n\n当歳魚\n漁獲量"=2,
+                              "伊豆東岸定置*\n\n当歳魚\n漁獲量"=2,
+                              "指標値の\n相乗平均\n\n(宮崎~千葉)"=2
+                              )) %>%
+  footnote(general = "* 資源評価には使っていない指標値。相乗平均の計算にも含んでいない。",
+           general_title = "")
   
 ybreaks <- seq_log(-3, 3)
-
+title   <- paste0("加入量指標値 (", params$year, "年まで)")
 plot_rawdata <-
-  parse_index("../tests/testthat/excel/index_maaji.xlsx", 2019,
-            type = "rawdata") %>%
+  parse_index("../tests/testthat/excel/index_maaji.xlsx",
+              params$year,
+              type = "rawdata") %>%
+  dplyr::filter(Place != "伊豆東岸定置網0歳魚漁獲量") %>%
+  dplyr::mutate(Place = 
+                  stringr::str_extract(Place,
+                                       "宮崎|宇和島|宿毛湾|串本|伊勢湾|千葉")) %>%
   ggplot(aes(Year, LogIndex, group = Place, color = Place)) +
   geom_line(size = 1.2) +
-  scale_y_log10(breaks = ybreaks,labels = ybreaks) +
+  scale_y_log10(breaks = ybreaks, labels = ybreaks) +
+  coord_cartesian(ylim = c(0.01, NA))+
+  scale_x_continuous(breaks = seq(2000, 2020, by = 2)) +
   theme_bw(base_size = 14) +
-  theme(legend.text = element_text(size = 10))
+  theme(
+   legend.text = element_text(size = 8),
+   legend.position = c(0.3, 0.12), legend.box = "horizontal",
+   legend.title = element_blank(),
+   legend.background = element_rect(fill="white",
+                                    size=0.2,
+                                    linetype="solid",
+                                    color = "black"),
+   axis.text.x = element_text(angle = 90, hjust = 1)) +
+  guides(color = guide_legend(nrow = 2)) +
+  labs(title = title, x = "", y = "加入量指標値 (対数値)")
 
 plot_geomean <-
-  parse_index("../tests/testthat/excel/index_maaji.xlsx", 2019,
-            type = "geomean") %>%
+  parse_index("../tests/testthat/excel/index_maaji.xlsx",
+              params$year,
+              type = "geomean") %>%
   dplyr::filter(Period %in% c("4-翌3月", "4-翌2月"),
-                Place == "指標値の_(宮崎~千葉)") %>%
+                Place == "指標値の_(宮崎~千葉)",
+                Year >= 2006) %>%
+  dplyr::mutate(Period = factor(Period, levels = c("4-翌3月", "4-翌2月"))) %>%
   ggplot(aes(Year, Geomean, group = Period, color = Period)) +
   geom_line(size = 1.2) +
-  scale_y_log10(breaks=ybreaks,labels = ybreaks) +
+  coord_cartesian(ylim = c(0, 9)) +
   theme_bw(base_size = 14) +
-  theme(legend.text = element_text(size = 10))
+  theme(
+    legend.text = element_text(size = 10),
+    legend.position = c(0.8, 0.8),
+    legend.title = element_blank(),
+    legend.background = element_rect(fill="white",
+                                     size=0.2,
+                                     linetype="solid",
+                                     color = "black"),
+    axis.text.x = element_text(angle = 90, hjust = 1)) +
+  labs(title = "指標値の相乗平均", x = "", y = "相乗平均")
+
 
 plot_grid(plot_rawdata, plot_geomean)
 ```
+
+図　左：各加入量指標値の推移（宮崎、串本以外の`r year()`年指標値は翌2月までの暫定値) <br>
+　　右：4月～翌3月集計値の相乗平均と4月～翌2月の相乗平均との比較

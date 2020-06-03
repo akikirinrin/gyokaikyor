@@ -42,6 +42,7 @@ parse_catch_legacy <- function(legacy) {
   dplyr::mutate(species = legacy$spcs,
                 year = as.integer(year),
                 month = as.integer(month),
+                catch_ton = as.double(catch_ton),
                 prefec = sheet) %>%
   dplyr::filter(!is.na(fishery) &
                   !is.na(year)) %>%
@@ -58,8 +59,10 @@ parse <- function(x) {
 parse.catch_maaji <- function(catch_maaji) {
   parse_catch_legacy(catch_maaji) %>%
     dplyr::mutate(Catch_ton = dplyr::if_else(Prefec == "静岡",
-                                             as.double(Catch_ton) / 1000,
-                                             as.double(Catch_ton)))
+                                             dplyr::if_else(Fishery == "定置網",
+                                                     Catch_ton / 1000,
+                                                     Catch_ton),
+                                             Catch_ton))
 }
 
 #' Convert legacy Excel to data frome

@@ -4,7 +4,7 @@
 \alias{df2table}
 \title{Generate catch table for report}
 \usage{
-df2table(df, spcs = NULL, year, format = "html")
+df2table(df, spcs = NULL, year, format = "html", header = TRUE)
 }
 \arguments{
 \item{df}{Data frame with
@@ -13,6 +13,10 @@ df2table(df, spcs = NULL, year, format = "html")
 \item{spcs}{Character of species name to extract}
 
 \item{year}{Year to extract in numeric}
+
+\item{format}{Select format output}
+
+\item{header}{TRUE to include header, FALSE to remove header}
 }
 \description{
 Generate catch table for report
