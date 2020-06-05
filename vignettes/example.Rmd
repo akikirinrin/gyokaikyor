@@ -1,5 +1,5 @@
 ---
-title: "`r params$year + 1` 年?月漁海況予報会議資料"
+title: "test_vignette"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{test_vignette}
